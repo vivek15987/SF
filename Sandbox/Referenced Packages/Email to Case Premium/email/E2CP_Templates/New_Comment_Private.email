@@ -1,0 +1,13 @@
+[A new *private* comment has been added to this case. Use caution when replying to this email because a *public* comment may be added depending on your organization's configuration.]
+
+{!Case.Most_Recent_Private_Comment__c}
+
+
+{!Case.HistoryText__c}
+
+***************************
+Case: {!Case.CaseNumber}
+
+
+
+{!Case.Case_Thread_Id__c}

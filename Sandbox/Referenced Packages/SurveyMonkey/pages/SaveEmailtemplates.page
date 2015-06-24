@@ -1,0 +1,21 @@
+<apex:page controller="SurveyMonkey.TabController" docType="html-4.01-strict" standardStylesheets="false" tabStyle="Survey_Campaign__tab">
+   <apex:form >
+          <apex:pageblock title="Send Email Template Preview: {!emailController.selectedtEmplate.name}"  >
+              <apex:PageBlockButtons >
+                   <apex:commandButton value="Send" action="{!emailController.sendEmail}" rerender="pgMsg"/>
+                   <apex:commandButton value="Back" action="{!goToEmailTemplate}"/>
+                </apex:PageBlockButtons>
+            <apex:pageMessages id="pgMsg"></apex:pageMessages>
+                            <apex:panelGrid columns="2">
+                                <b>Title :</b>
+                                <apex:inputText id="emailTo" value="{!emailController.toadderss}" style="width:450px;" />
+                                <b>Subject :</b>
+                                <apex:inputText id="emailSubject" value="{!emailController.selectedtEmplate.subject}" style="width:450px;" 
+                                								  rendered="{!$ObjectType.EmailTemplate.fields.Subject.Createable}" />
+                            </apex:panelGrid>
+                                <br/>
+                                <apex:inputTextarea style="width:100%" id="emailBody" rows="20" cols="135" value="{!emailController.selectedtEmplate.body}" 
+                                                                rendered="{!$ObjectType.EmailTemplate.fields.Body.Createable}" />
+                        </apex:pageblock>
+        </apex:form>   
+</apex:page>

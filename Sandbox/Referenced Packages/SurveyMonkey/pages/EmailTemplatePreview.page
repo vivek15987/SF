@@ -1,0 +1,65 @@
+<apex:page controller="SurveyMonkey.EmailTemplatePreviewController" sidebar="false" showheader="false">
+<apex:form >
+<apex:pageblock title="Email Template Preview" id="surveyPreview">
+ <apex:pageMessages id="pgmsg"/> 
+             <apex:panelGroup rendered="{!NOT(ISNULL(selectedtEmplate))}">
+             
+                <table>
+                    <tr>
+                        <td><b>Name</b></td>
+                        <td><b>:</b></td>
+                        <td><apex:outputLabel value="{!selectedtEmplate.name}" /></td>
+                    </tr><!--<tr>
+                        <td><b>Reply To</b></td>
+                        <td><b>:</b></td>
+                        <td>
+                            <input type="text" disabled="true" id="fromEmailAddress" value="{!replyToAddress}" style="width:450px;"/>
+                        </td>
+                    </tr>--><tr>
+                        <td><b>Reply-To</b></td>
+                        <td><b>:</b></td>
+                        <td>
+                            <input type="text" disabled="true" id="fromEmailAddress" value="{!fromEmailAddress}" style="width:450px;"/>
+                        </td>
+                    </tr><tr>
+                        <td><b>Subject</b></td>
+                        <td><b>:</b></td>
+                        <td>
+                            <apex:inputField id="emailSubject" value="{!selectedtEmplate.subject}" style="width:450px;" >
+                                <script>document.getElementById('{!$Component.emailSubject}').disabled = true; </script>
+                            </apex:inputField>
+                        </td>
+                    </tr><tr>
+                        <td><b>Body</b></td>
+                        <td><b>:</b></td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr><tr>
+                        <td colspan="3">
+                            <apex:inputField id="emailBody" style="width:100%; height:200px" value="{!selectedtEmplate.body}">
+                                <script>document.getElementById('{!$Component.emailBody}').disabled = true; </script>
+                            </apex:inputField>
+                        </td>
+                    </tr>
+                    
+                </table>
+             
+                 <!-- <b>Name :</b>
+                 <apex:outputLabel value="{!selectedtEmplate.name}"></apex:outputLabel>
+                 <br/><b>From :</b>
+                 
+                 
+                 <br/><b>Subject :</b>
+                 <apex:inputField id="emailSubject" value="{!selectedtEmplate.subject}" style="width:450px;" >
+                    <script>document.getElementById('{!$Component.emailSubject}').disabled = true; </script>
+                 </apex:inputField>
+                 <br/><b>Body:</b>
+                 <br/>
+                 <apex:inputField style="width:100%; height:200px" id="emailBody"  value="{!selectedtEmplate.body}">
+                 <script>document.getElementById('{!$Component.emailBody}').disabled = true; </script>
+                 </apex:inputField> -->
+             </apex:panelGroup>  
+</apex:pageblock>
+</apex:form> 
+</apex:page>

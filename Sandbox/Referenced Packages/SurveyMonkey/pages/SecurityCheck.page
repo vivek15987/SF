@@ -1,0 +1,11 @@
+<apex:page controller="SurveyMonkey.SecurityCheckController" showheader="false" sidebar="false">
+    <apex:form >
+    <apex:pageBlock >
+    <apex:pageMessages />
+        <apex:commandButton value="get survey list" action="{!getSurveyList}"/>
+        <Br/>
+        {!Message}
+        
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

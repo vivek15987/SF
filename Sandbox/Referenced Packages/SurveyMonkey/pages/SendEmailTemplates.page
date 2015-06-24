@@ -1,0 +1,31 @@
+<apex:page controller="SurveyMonkey.TabController" docType="html-4.01-strict" standardStylesheets="false" tabStyle="Survey_Campaign__tab">
+    <apex:stylesheet value="{!$Resource.SurveyMonkey__sm_app}"/>
+     <apex:form >
+          <apex:pageblock title="Send Email Template Preview: {!emailController.selectedtEmplate.name}"  >
+              <apex:PageBlockButtons >
+                   <apex:commandButton value="Send" action="{!emailController.sendEmail}" rerender="pgMsg"/>
+                   <apex:commandButton value="Cancel" onclick="window.opener = self;window.close();return false;"/>
+                </apex:PageBlockButtons>
+            <apex:pageMessages id="pgMsg"></apex:pageMessages>
+                            <apex:panelGrid columns="2">
+                                <b>From :</b>
+                                <apex:inputText id="emailFrom" value="{!emailController.fromAdderss}" style="width:450px;" disabled="true"/>
+                                <b>To :</b>
+                                <apex:inputText id="emailTo" value="{!emailController.toadderss}" style="width:450px;" />
+                                <b>Subject :</b>
+                                <apex:inputText id="emailSubject" value="{!emailController.selectedtEmplate.subject}" rendered="{!$ObjectType.EmailTemplate.fields.Subject.Createable}" style="width:450px;" />
+                            </apex:panelGrid>
+                            <apex:panelGrid columns="3">
+                                <apex:outputLabel value="Account"/>
+                                <apex:outputLabel value="Contact"/>
+                                <apex:outputLabel value="Case"/>
+                                
+                                <apex:inputField value="{!lookWrap.acc.parentId}"/>
+                                <!--<apex:inputField value="{!lookWrap.contact.ReportsTo}"/>                                
+                                <apex:inputField value="{!lookWrap.cas.Parent}"/>                                           -->                     
+                            </apex:panelGrid>
+                                <br/>
+                                <apex:inputTextarea style="width:100%" id="emailBody" rows="20" cols="135" rendered="{!$ObjectType.EmailTemplate.fields.Body.Createable}" value="{!emailController.selectedtEmplate.body}" />
+                        </apex:pageblock>
+        </apex:form>                        
+</apex:page>

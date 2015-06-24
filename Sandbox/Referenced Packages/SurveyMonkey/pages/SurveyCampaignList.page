@@ -1,0 +1,783 @@
+<apex:page controller="SurveyMonkey.SurveyCampaignList" id="page"  tabStyle="Survey_Campaign__tab">
+<!--**********************************Include the Data Table Script***************************** -->
+<apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-1.10.1.min.js')}"/>
+
+<apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'complete.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery.dataTables.min.js')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'demo_table_jui.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-ui-1.7.2.custom.css')}"/>  
+<apex:stylesheet value="{!$Resource.SurveyMonkey__SM_Stylesheet}"/> 
+<apex:stylesheet value="{!$Resource.SurveyMonkey__sm_app}"/>
+<apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-ui-1.10.4.min.js')}"/>
+<script src="/soap/ajax/19.0/connection.js" type="text/javascript" /> 
+<!--******************************Header which contain style sheet and script************************** -->
+<head>
+    <style type="text/css" media="screen">
+        .btn1{
+            padding:19px 13px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-moz-background-clip:padding;-webkit-background-clip:padding-box;background-clip:padding-box;text-shadow:0 1px 0 #fff;cursor:pointer;font-size:15px;font-weight:bolder;white-space:nowrap;text-decoration:none !important;color:#333;display:inline-block;border:solid 1px #bbb;background-color:#f0f0ea;background:-webkit-gradient(linear, left top, left bottom, from(#f0f0ea), to(#d5d7ce));background:-webkit-linear-gradient(top, #f0f0ea, #d5d7ce);background:-moz-linear-gradient(top, #f0f0ea, #d5d7ce);background:-ms-linear-gradient(top, #f0f0ea, #d5d7ce);background:-o-linear-gradient(top, #f0f0ea, #d5d7ce);position:relative
+        }
+        .btn1:hover{
+            z-index:1;text-decoration:none;border-color:#999;background-color:#f5f5ee;background:-webkit-gradient(linear, left top, left bottom, from(#f5f5ee), to(#dcded5));background:-webkit-linear-gradient(top, #f5f5ee, #dcded5);background:-moz-linear-gradient(top, #f5f5ee, #dcded5);background:-ms-linear-gradient(top, #f5f5ee, #dcded5);background:-o-linear-gradient(top, #f5f5ee, #dcded5)
+        }
+        .btn-hover-only{
+            background:none;border:solid 1px transparent
+        }
+        .btn1:active,.btn1.open{
+            border-color:#999;background-color:#dcded5;background:-webkit-gradient(linear, left top, left bottom, from(#dcded5), to(#f5f5ee));background:-webkit-linear-gradient(top, #dcded5, #f5f5ee);background:-moz-linear-gradient(top, #dcded5, #f5f5ee);background:-ms-linear-gradient(top, #dcded5, #f5f5ee);background:-o-linear-gradient(top, #dcded5, #f5f5ee)
+        }
+        .btn1.disabled:hover,.btn1.disabled:active,.btn1.open.disabled{
+            border-color:#BBB;background-color:#f0f0ea;background:-webkit-gradient(linear, left top, left bottom, from(#f0f0ea), to(#d5d7ce));background:-webkit-linear-gradient(top, #f0f0ea, #d5d7ce);background:-moz-linear-gradient(top, #f0f0ea, #d5d7ce);background:-ms-linear-gradient(top, #f0f0ea, #d5d7ce);background:-o-linear-gradient(top, #f0f0ea, #d5d7ce)
+        }
+        .btn-arrow>span{
+            background:url("{!$Resource.Right_Arrow}") no-repeat scroll 0 -497px transparent;display:inline-block;height:12px;width:6px;zoom:1;*display:inline
+        }
+        .btn-arrow-right{
+            padding-right:10px
+        }
+        .btn-arrow-right>span{
+            margin-left:6px
+        }
+        .btn-large.btn-arrow-right{
+            padding-right:25px;padding-left:27px
+        }
+        .btn-large.btn-arrow-left{
+            padding-right:11px;padding-left:9px
+        }
+        .yellow{
+            border-color:#DFC235;text-shadow:0 1px 0 #fcfc85;background-color:#f8f777;background:-webkit-gradient(linear, left top, left bottom, from(#f8f777), to(#dfc235));background:-webkit-linear-gradient(top, #f8f777, #dfc235);background:-moz-linear-gradient(top, #f8f777, #dfc235);background:-ms-linear-gradient(top, #f8f777, #dfc235);background:-o-linear-gradient(top, #f8f777, #dfc235)
+        }
+        .yellow:hover{
+            border-color:#999;background-color:#fcfc85;background:-webkit-gradient(linear, left top, left bottom, from(#fcfc85), to(#edce38));background:-webkit-linear-gradient(top, #fcfc85, #edce38);background:-moz-linear-gradient(top, #fcfc85, #edce38);background:-ms-linear-gradient(top, #fcfc85, #edce38);background:-o-linear-gradient(top, #fcfc85, #edce38)
+        }
+        .yellow:active,.yellow.open{
+            border-color:#999;background-color:#f7e258;background:-webkit-gradient(linear, left top, left bottom, from(#f7e258), to(#faf476));background:-webkit-linear-gradient(top, #f7e258, #faf476);background:-moz-linear-gradient(top, #f7e258, #faf476);background:-ms-linear-gradient(top, #f7e258, #faf476);background:-o-linear-gradient(top, #f7e258, #faf476)
+        }
+        .yellow.disabled:hover,.yellow.disabled:active,.yellow.open.disabled{
+            border-color:#DFC235;background-color:#f8f777;background:-webkit-gradient(linear, left top, left bottom, from(#f8f777), to(#dfc235));background:-webkit-linear-gradient(top, #f8f777, #dfc235);background:-moz-linear-gradient(top, #f8f777, #dfc235);background:-ms-linear-gradient(top, #f8f777, #dfc235);background:-o-linear-gradient(top, #f8f777, #dfc235)
+        }
+        
+        
+            .dataTables_info { padding-top: 0; display : none; }
+            .dataTables_paginate { padding-top: 0; }
+            .css_right { float: right; }
+            #example_wrapper .fg-toolbar { font-size: 0.8em }
+            #theme_links span { float: left; padding: 2px 10px; }
+            #example_wrapper { -webkit-box-shadow: 2px 2px 6px #666; box-shadow: 2px 2px 6px #666; border-radius: 5px; }
+            #example tbody {
+                border-left: 1px solid #AAA;
+                border-right: 1px solid #AAA;
+            }
+            #example thead th:first-child { border-left: 1px solid #AAA; }
+            #example thead th:last-child { border-right: 1px solid #AAA; }
+    </style>
+    <style type="text/css">
+        .header {
+            font-size: 25px;
+            display: block;
+            font-family: Arial;
+            margin-left: 500px;
+        }
+        .custPopup{
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            z-index: 9999;
+            left: 50%;
+            padding:10px;
+            position: absolute;
+            /* These are the 3 css properties you will need to change so the popup 
+            displays in the center of the screen. First set the width. Then set 
+            margin-left to negative half of what the width is. You can add 
+            the height property for a fixed size pop up if you want.*/
+            width: 500px;
+            left: 300px;
+            top:25px;
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+            height : 800%;
+        }
+        #dvLoading {
+            background: no-repeat scroll center center #000;
+            width: 100%;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            height: 100%;
+            opacity: 0.5;
+            z-index: 9999;
+        }
+        .ShowModal
+        {
+            top: 200px;
+            left: 480px;
+            z-index: 1000;
+            position: absolute;
+            background-color: White;
+            display: block;
+        }
+        .HideModal
+        {
+            display: none;
+        }
+        .OverlayEffect
+        {
+            background-color: black;
+            
+            opacity: 0.10;
+            width: 100%;
+            height: 100%;
+            z-index: 400;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        #hover{
+            position: fixed;
+            background-color: yellow;
+            z-index: 100;
+            border: 2px solid crimson;
+        }
+        #hover table {
+            border-collapse: collapse
+        }
+        #hover td {
+            border: 1px solid crimson;
+        }
+        
+        
+        /*------------------*/
+        
+    @font-face { 
+        font-family: SM-Icons;
+        src: url(https://secure.surveymonkey.com/smassets/smlib.ui/1.0.7/assets/fonts/smiconswebfont.eot?#) format("eot"),
+             url(https://secure.surveymonkey.com/smassets/smlib.ui/1.0.7/assets/fonts/smiconswebfont.woff) format("woff"),
+             url(https://secure.surveymonkey.com/smassets/smlib.ui/1.0.7/assets/fonts/smiconswebfont.ttf) format("truetype"),
+             url(https://secure.surveymonkey.com/smassets/smlib.ui/1.0.7/assets/fonts/smiconswebfont.svg#webfontIyfZbseF) format("svg");
+        font-weight: 400;
+        font-style: normal;
+    }
+    
+    .right-td {
+        width: 520px;
+        padding-top: 30px;
+        -webkit-font-smoothing: antialiased;
+    }
+    #Left-box{
+        background-color: #86a33b; 
+        margin:30px 20px 30px 30px; 
+        padding-top: 30px;
+        width:352px;
+        height:331px;
+        border-radius: 5px;
+    }
+    #Left-box .text{
+        font-size: 23px; alpha:100%; font-family: Helvetica-Light; color: #ffffff;
+        -webkit-font-smoothing: antialiased;
+    }
+    
+    #GetStarted{
+        width:157px;height:58px;
+    }
+    #header{
+        font-size: 30px; alpha:100%; font-family: Helvetica-Light; color: #333333;
+    }
+    #sub-header{
+        font-size: 21px; 
+        alpha:100%; 
+        font-family: Helvetica-Light; 
+        color: #666666;
+        line-height: 1.5em;
+    }
+    #cntnt{
+        font-size: 16px; 
+        alpha:100%; 
+        font-family: ArialMT; 
+        color: #666666;
+        line-height: 1.3em;
+    }
+    #sub-cntnt{
+        font-size: 16px; 
+        alpha:100%; 
+        font-family: ArialMT; 
+        color: #333333;
+        font-weight: 600;
+        display: inline-block;
+        margin-top: 10px;
+    }
+    #points{
+        list-style-type: none;
+        padding-left: 0;
+    }
+    .point{
+        margin-left: 0;
+        position: relative;
+        font-size: 14px; 
+        alpha:100%; 
+        font-family: ArialMT; 
+        color: #666666;
+        line-height: 2.5em;
+    }
+    .point .chk{
+        font-size: 18px; alpha:100%; font-family: SM-Icons; color: #85a33a;padding-right:15px;
+    }
+    .power{
+        font-size: 12px;position:relative;top:-5px; left: -1px;
+    }
+    .apexp{
+        border-radius: 5px;
+    }
+    </style> 
+<script>
+        function showHover(e,tbl){
+          var div = document.getElementById('hover');
+          div.style.display = 'block';
+          div.innerHTML = tbl;
+          var left  = e.clientX  + "px";
+          var top  = (e.clientY+10)  + "px";
+       
+          div.style.left = left;
+          div.style.top = top;
+       
+      }
+   
+      
+      function hideHover(){
+          document.getElementById('hover').style.display = 'none';
+      }
+
+    var records=[];
+    //sforce.connection.sessionId = '{!$Api.Session_ID}';
+    //result = sforce.connection.query("select OwnerId, Owner.Name, Owner.Alias, Id, Name, {!JSENCODE(prefix)}IsActive__c, {!JSENCODE(prefix)}ParentCollector__c, {!JSENCODE(prefix)}RecurringSendingMethod__c, {!JSENCODE(prefix)}Num_Completed_Response__c,  {!JSENCODE(prefix)}Valid_Recipients__c, "+
+    //"{!JSENCODE(prefix)}Num_Respondent2__c, {!JSENCODE(prefix)}Total_Recipients__c, {!JSENCODE(prefix)}Total_Responses__c, CreatedDate, {!JSENCODE(prefix)}Status__c, {!JSENCODE(prefix)}Type__c, (SELECT {!JSENCODE(prefix)}Field_Label__c, {!JSENCODE(prefix)}Operator__c, {!JSENCODE(prefix)}Value__c FROM {!JSENCODE(prefix)}Filter_Criterias__r ORDER BY {!JSENCODE(prefix)}Field_Label__c ) from {!JSENCODE(prefix)}Collector__c WHERE {!JSENCODE(prefix)}ParentCollector__c = null AND {!JSENCODE(prefix)}IsPending__c=false order by CreatedDate DESC");
+    var queryMore = true;
+    var index;
+    var DropCounter=0;
+    var mapArray=[];
+    var loggedInUserId ='';
+    var profile ='';
+    var TotalRecords=0;
+    var SelectedDeleteRecord='';
+    var namespacePrefix = '{!JSENCODE(prefix)}';
+    
+    
+    
+    $(document).ready(function(){          
+          
+          if(!'{!is_enterprise_user}'){              
+              $('#dvLoading').fadeOut();
+                return false;
+          }          
+          $('#dvLoading').fadeIn();
+          loggedInUserId = '{!$User.Id}';
+          profile='{!userProfileName}';
+          //alert(profile);
+          //alert(loggedInUserId);
+          result = $.parseJSON($('#surveyListJSON').text());
+          var counter=0;
+          DropCounter = 0;
+          index=2000;
+          mapArray[DropCounter] = result;  
+          RenderTable();
+          
+          $("#idnumRecords").change(function(){
+            $('#dvLoading').fadeIn();
+            $('#myTable').dataTable().fnDestroy();
+            $("#tblbodyId").empty();
+            var selectedIndex = this.value;
+            
+            if(selectedIndex=="more"){
+                $("#idnumRecords").find('option[value=more]').remove();
+                
+                // broken, but shouldn't be necessary... not limiting results from SOQL for now
+                //result = sforce.connection.queryMore(result.queryLocator);
+                DropCounter=DropCounter+1;
+                
+                var html='<option value="'+DropCounter+'">'+index +'-'+ parseInt(index+2000) +'</option>';
+                $(html).appendTo('#idnumRecords');
+                index =index+2000;
+                $('#idnumRecords').val(DropCounter);
+                mapArray[DropCounter] = result.getArray("records");  
+                RenderTable();
+     
+            }
+            else{
+     
+                  $('#idnumRecords').val(selectedIndex);
+                  // if this is necessary, use RenderTable
+            }
+          });
+    });
+
+
+function RenderTable(){
+    
+    if(document.getElementById("{!$Component.functionCont.showLogin}") != null){
+        //alert('Test'+'='+document.getElementById("{!$Component.functionCont.linkedOrg}").value+'='+document.getElementById("{!$Component.functionCont.saveAfterRefresh}").value+'='+document.getElementById("{!$Component.functionCont.showLogin}").value+'=');
+        if(document.getElementById("{!$Component.functionCont.showLogin}").value == 'false'){
+                  if(document.getElementById("{!$Component.functionCont.saveAfterRefresh}").value == 'true')$('#alert').dialog({title:'Invalid User', modal:true});
+              }  
+          if(document.getElementById("{!$Component.functionCont.linkedOrg}").value == 'true'){
+              
+              if(document.getElementById("{!$Component.functionCont.saveAfterRefresh}").value == 'true')$('#alertLinked').dialog({title:'Invalid User', modal:true});
+          }
+      }
+
+    //var surveyList = result.getArray("records");
+    var surveyList = result;
+
+    if(surveyList.length>0){
+        TotalRecords = TotalRecords + surveyList.length;
+    }
+    //document.getElementById('TotalRecords').innerHTML=TotalRecords;
+    
+    for (var j = 0; j < surveyList.length; j++) {
+           var status='';
+           var ParentRecord = surveyList[j][namespacePrefix+'ParentCollector__c'];
+            if(''+surveyList[j][namespacePrefix+'IsActive__c'] == 'true'){
+                status = 'Deactivate';
+            }
+            else{
+                status = 'Activate'; 
+            }
+            
+            var Num_Completed_Response__c = surveyList[j][namespacePrefix+'Type__c']!='Recurring' ? isNaN(parseInt(surveyList[j][namespacePrefix+'Valid_Recipients__c'])) ? 0 : parseInt(surveyList[j][namespacePrefix+'Valid_Recipients__c']) :
+                        isNaN(parseInt(surveyList[j][namespacePrefix+'Total_Recipients__c'])) ? 0 : parseInt(surveyList[j][namespacePrefix+'Total_Recipients__c']) ;
+            
+            var Num_Respondent2__c = surveyList[j][namespacePrefix+'Type__c']!='Recurring' ? isNaN(parseInt(surveyList[j][namespacePrefix+'Num_Respondent2__c'])) ? 0 : parseInt(surveyList[j][namespacePrefix+'Num_Respondent2__c']) :
+                                     isNaN(parseInt(surveyList[j][namespacePrefix+'Total_Responses__c'])) ? 0 : parseInt(surveyList[j][namespacePrefix+'Total_Responses__c']);
+                    
+            var Type__c = surveyList[j][namespacePrefix+'Type__c'] == null ? '' : surveyList[j][namespacePrefix+'Type__c'];
+            if( (Type__c.trim() == 'Recurring' || Type__c.trim() == 'Triggered' ) && surveyList[j][namespacePrefix+'RecurringSendingMethod__c']!=null){
+                    Type__c =   surveyList[j][namespacePrefix+'RecurringSendingMethod__c'];
+            }
+            
+            var htmlType='';
+            //If its Triggered; add hover for the type, having criterias
+                if(surveyList[j][namespacePrefix+'Type__c']== 'Triggered' && surveyList[j][namespacePrefix+'Filter_Criterias__r']!=null){
+                        //criterias = surveyList[j][namespacePrefix+'Filter_Criterias__r'].getArray("records");
+                        criterias = surveyList[j][namespacePrefix+'Filter_Criterias__r'].records;
+                        //htmlData = '<table><tr><td><b>Object</b></td><td><b>Max Survey</b></td><td><b>Time Period</b></td></tr>';
+                        htmlData = '<table><tr><td colspan=\\\'3\\\' align=\\\'center\\\'><b>Filters</b></td></tr>';
+                        
+                        for(var cIndex = 0; cIndex < criterias.length; cIndex++){
+                                htmlData = htmlData+'  <tr><td>'+criterias[cIndex][namespacePrefix+'Field_Label__c']+'</td>  <td>'+criterias[cIndex][namespacePrefix+'Operator__c']+'</td> <td>'+criterias[cIndex][namespacePrefix+'Value__c'] +'</td></tr>';
+                        }
+                
+                        htmlType = '<span onmouseover="showHover(event,\''+ htmlData+ '</table>\')" onmouseout="hideHover()" >'+Type__c+'</span>';
+                }
+            
+            var EditButton='';
+            var DeleteButton='';
+            var ActivateButton='';
+            
+               
+            if((ParentRecord!= null || surveyList[j].OwnerId !=loggedInUserId || status == 'Activate') &&  profile!='System Administrator')
+            {
+                EditButton = '<a href="javascript:void(0);" id=edit'+surveyList[j].Id+' style="text-decoration: none; color: grey; cursor:default;" >Edit</a>';
+            } 
+            else{
+                EditButton = '<a title ="Edit to add more recipents" href="javascript:void(0);" id=edit'+surveyList[j].Id+' onclick="EditRecord(\''+surveyList[j].Id+'\');return false;">Edit</a>';
+            }   
+            if(surveyList[j].OwnerId ==loggedInUserId || profile=='System Administrator')
+            {
+                DeleteButton = '<a href="javascript:void(0);" title ="Delete Survey" id=del'+surveyList[j].Id+' onclick="PopUpBtnClick(\''+surveyList[j].Id+'\',\''+Type__c+'\');">Delete</a>';
+            } 
+            else{
+                DeleteButton = '<a href="javascript:void(0);" id="edit" style="text-decoration: none; color: grey; cursor:default; ">Delete</a>';
+            }
+            
+            if((surveyList[j].OwnerId !=loggedInUserId || ParentRecord != null)&&  profile!='System Administrator')
+            {
+                ActivateButton = '<a href="javascript:void(0);" id="edit" style="text-decoration: none; color: grey;cursor:default">'+status+'</a>';
+            } 
+            else{
+                ActivateButton = '<a href="#" id='+surveyList[j].Id+' title="Deactivate Survey" onclick="UpdateStatus(\''+surveyList[j].Id+'\');" return false;">'+status+'</a>';
+            }
+                
+            if(htmlType==''){
+                htmlType=Type__c;
+            }
+                           
+            if(j%2==0){
+                /* var html='<tr class="odd"><td>'+surveyList[j].Name+ '</td><td>'+parseInt(surveyList[j][namespacePrefix+'Num_Completed_Response__c'])+ '</td><td>'+parseInt(surveyList[j][namespacePrefix+'Num_Respondent2__c'])+ '</td><td>'+surveyList[j][namespacePrefix+'Type__c']+ '</td><td>'+ surveyList[j].Owner +'</td><td>'+convertedDateTime+ '</td><td><a href="#" id='+surveyList[j].Id+' onclick="UpdateStatus(\''+surveyList[j].Id+'\');" return false;">'+status+'</a> || <a href="javascript:void(0);" id=del'+surveyList[j].Id+' onclick="DeleteRecord(\''+surveyList[j].Id+'\');return false;">Delete</a></td></tr>'; */
+                 var html='<tr class="odd">'
+                                +'<td >'+EditButton+'&nbsp;|&nbsp;'+ActivateButton+'&nbsp;|&nbsp;'+DeleteButton+'</td>'
+                                +'<td>'+surveyList[j].Name+ '</td><td>'+Num_Completed_Response__c+ '</td><td>'+Num_Respondent2__c+ '</td><td>'+ htmlType+ '</td><td>'+ surveyList[j].Owner.Alias +'</td><td>'+DateUtil.getDateTimeStringFromUserLocale(new Date(surveyList[j].CreatedDate))+ '</td></tr>'; 
+                 $(html).appendTo('#myTable');
+            }else{
+                var html='<tr class="even">'
+                +'<td>'+EditButton+'&nbsp;|&nbsp;'+ActivateButton+' |&nbsp;'+DeleteButton+'</td>'
+                +'<td>'+surveyList[j].Name+ '</td><td>'+Num_Completed_Response__c+ '</td><td>'+Num_Respondent2__c+ '</td><td>'+ htmlType+ '</td><td>'+ surveyList[j].Owner.Alias +'</td><td>'+DateUtil.getDateTimeStringFromUserLocale(new Date(surveyList[j].CreatedDate))+ '</td></tr>';
+                 $(html).appendTo('#myTable');
+            } 
+                
+            
+    } 
+       $('#myTable').dataTable( { 
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+            "bDestroy": false,
+            "aaSorting": [[6,'desc']]  
+      });
+       
+    
+    //if (result.getBoolean("done")) {
+             
+            //$('#dvLoading').fadeOut();
+    //} else {
+ 
+        //var html='<option value="more">--Add More--</option>';
+        //$(html).appendTo('#idnumRecords');
+      //}
+    $('#dvLoading').fadeOut();
+}
+function UpdateStatus(getId){
+          console.log('Hi i am in 1'+getId);
+          $('#dvLoading').fadeIn();
+          Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.SurveyCampaignList.UpdateItem}',getId,
+                  function(result, event){ 
+                        console.log('Hi i am in 2');
+                        if (event.status) {
+                                  console.log('Hi i am in 3');
+                                  var x = document.getElementById(getId);
+                                   
+                                  if(result==true){
+                                    x.innerHTML = 'Deactivate';
+                                    document.getElementById('edit'+getId).removeAttribute("style");
+                                    document.getElementById(getId).setAttribute("title", "Deactivate Survey"); 
+                                  }
+                                  else{
+                                    x.innerHTML = 'Activate';
+                                    document.getElementById('edit'+getId).setAttribute("style", "text-decoration: none; color: grey;");
+                                    document.getElementById(getId).setAttribute("title", "Activate Survey");
+                                  }
+                                  
+                                  
+                                  //alert(x);
+                                  $('#dvLoading').fadeOut();
+                             
+                             
+                             
+                        } else if (event.type === 'exception') {
+                            $('#customErrorDiv').show();
+                            $('#customResponseErrors').html(event.message + "<br/>\n<pre>" + event.where + "</pre>");
+                        } else {
+                            $('#customErrorDiv').show();
+                            $('#customResponseErrors').html(event.message);
+                        }
+                    }, 
+                    { buffer: true, escape: false, timeout: 120000 }
+                    );
+    }
+    
+function DeleteRecord(isDeleteCompleteSurvey, isDeleteResponses, isDeleteResponseRecipient){
+ 
+     $('#dvLoading').fadeIn();
+     var selectedrow = document.getElementById('del'+SelectedDeleteRecord);
+    //alert(getId);
+     Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.SurveyCampaignList.DeleteItem}', SelectedDeleteRecord, isDeleteCompleteSurvey, isDeleteResponses, isDeleteResponseRecipient,
+                 function(result, event){ 
+                    if (event.status) {
+                           // data parsing 
+                           //result=JSON.parse(result);
+                           if(result=='success'){
+                             
+                           //document.getElementById('del'+getId).style.display="none";
+                            if(isDeleteCompleteSurvey==true){
+                                $(selectedrow).parent().parent().remove();
+                            }
+                           $('#dvLoading').fadeOut();
+                           document.getElementById('modalMsg').className = 'HideModal'; 
+                           document.getElementById('overlay').className = '';
+                         }
+                        else{
+                            $('#customErrorDiv').show();
+                            $('#customResponseErrors').html(result);
+                        }
+                           $('#myTable').dataTable( {
+                            "bJQueryUI": true,
+                            "sPaginationType": "full_numbers",
+                            "bDestroy": false 
+                             
+                        } );
+                            
+                       } else if (event.type === 'exception') {
+                        $('#customErrorDiv').show();
+                        $('#customResponseErrors').html(event.message + "<br/>\n<pre>" + event.where + "</pre>");
+                    } else {
+                        $('#customErrorDiv').show();
+                        $('#customResponseErrors').html(event.message);
+                    }
+                }, 
+                { buffer: true, escape: false, timeout: 120000 }
+                );
+                
+              
+}
+
+
+function EditRecord(getId){
+    if(document.getElementById('edit'+getId).style.color == 'grey'){
+    console.log('Edit Record Method if');
+        return false;
+    } 
+    else{
+    console.log('Edit Record Method else'+getId);
+        window.open('/apex/{!JSENCODE(prefix)}surveycampaignconfirmation?colid='+getId+'&mode=ed', '_top');
+    }
+}
+ 
+function PopUpBtnClick(getId, getType){
+ 
+   SelectedDeleteRecord = getId;
+   if(getType.trim() == 'Manual'){
+        DeleteRecord(true, false, false);
+   }
+   else{
+        document.getElementById("overlay").className = "OverlayEffect";
+        document.getElementById("modalMsg").className = "ShowModal";
+   }
+}
+
+function callback_MonitorCheck(){
+    
+    if(document.getElementById("{!$Component.functionCont.code}").value != null && document.getElementById("{!$Component.functionCont.code}").value != ''){
+        callback_Monitor();
+    }
+}
+/* window.onbeforeunload = function (event) {
+  var message = 'Sure you want to leave?';
+  if (typeof event == 'undefined') {
+    event = window.event;
+  }
+  if (event) {
+    event.returnValue = message;
+  }
+  return message;
+} */
+ 
+ window.onload = function(){
+     pageLoad();
+ }
+</script> 
+
+</head>   
+
+<!--**********************************Main form code***************************** -->
+<span id="surveyListJSON" style="display:none">{!surveyListJSON}</span>
+<div id="hover" style="display:none"></div>
+        
+ <div id="alert" style="display:none">
+    <apex:form > 
+        <br/>
+        <p style= "display:inline;">'Please try logging in with an Enterprise account.'</p>
+        <div style="text-align: center;margin-top:10px;" id="modal-buttons">
+            <apex:commandButton value="Ok" action="{!updateUser}" reRender="container,saveAfterRefresh,linkedOrg,showLogin,groupId" oncomplete="document.getElementById('initialLoad').style.display = 'block';RenderTable();$('#alert').dialog('close');" status="callControllerMethod"/>
+            <!--<apex:commandButton style="width:80px" value="Ok" action="{!referesh}" oncomplete="popup();afterSave()"/>
+            <apex:commandButton style="width:80px" value="Cancel" />-->
+        </div>
+     </apex:form> 
+ </div> 
+ <div id="alertLinked" style="display:none">
+    <apex:form > 
+        <br/>
+        <p style= "display:inline;">'Please login using SurveyMonkey account which is linked to this Org - <apex:outputText id="groupId" value="{!groupName}"/>'</p>
+        <div style="text-align: center;margin-top:10px;" id="modal-buttons">
+            <apex:commandButton value="Ok" action="{!updateUser}" reRender="container,saveAfterRefresh,linkedOrg,showLogin,groupId" oncomplete="document.getElementById('initialLoad').style.display = 'block';RenderTable();$('#alertLinked').dialog('close');" status="callControllerMethod"/>
+            <!--<apex:commandButton style="width:80px" value="Ok" action="{!referesh}" oncomplete="popup();afterSave()"/>
+            <apex:commandButton style="width:80px" value="Cancel" />-->
+        </div>
+     </apex:form> 
+ </div> 
+    <apex:form id="functionCont">     
+     
+        <apex:actionFunction name="callback_Monitor" action="{!callback_Monitor}" reRender="linkedOrg"/>
+        <apex:actionFunction action="{!pageLoad}" name="pageLoad" reRender="container,saveAfterRefresh,linkedOrg,showLogin,groupId,code" oncomplete="document.getElementById('initialLoad').style.display = 'block';RenderTable();callback_MonitorCheck();" status="callControllerMethod"/>
+        <apex:actionStatus id="callControllerMethod">
+           <apex:facet name="stop">
+           </apex:facet>
+           <apex:facet name="start">
+               <apex:outputPanel >
+                   <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb;
+                   height: 100%;opacity:0.90;width:100%;"> 
+                   <!-- <div class="waitingHolder" style="top: 74.2px; width: 91px;">-->
+                    <div class="waitingHolder" style="position: fixed;left: 35%; right: 50%;" >
+                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                        <span class="waitingDescription">{!$Label.Loading}...</span>
+                        <img class="waitingImage" src="{!URLFOR($Resource.JSDataTable, 'images/Cancel.png')}" title="Please Wait..." onClick="hideStatus();" style="width: 14px;margin-top: -4px;margin-left: 10px;"/>
+                    </div>
+                </div>
+               </apex:outputPanel>
+           </apex:facet>
+        </apex:actionStatus>
+      <apex:inputHidden id="showLogin" value="{!showLogin}"/>   
+      <apex:inputHidden id="linkedOrg" value="{!linkedOrg}"/>  
+      <apex:inputHidden id="saveAfterRefresh" value="{!saveAfterRefresh}"/> 
+      <apex:inputHidden id="code" value="{!code}"/>
+    </apex:form>
+
+<apex:outputPanel id="container">
+<div id="initialLoad" style="display:none">
+<apex:outputPanel rendered="{!OR(NOT(is_enterprise_user),linkedOrg,NOT(SFEnabled))}">
+    
+    <apex:pageBlock id="new-page">
+        <table>
+            <tr>
+                <td align="center" class='left-td'>
+                    <apex:form >
+                        <apex:actionFunction action="{!login}" name="loginURL" reRender="redirectURL" oncomplete="top.location = document.getElementById('{!$Component.redirectURL}').value"/>
+                        <apex:inputHidden id="redirectURL" value="{!completeURL}"/>
+                        <div id='Left-box' onclick="loginURL();">
+                            <apex:image value="{!URLFOR($Resource.SurveyMonkey__Images, 'Images/sync_image.png')}"/><br/><br/>
+                            <span class='text'>Sync your SurveyMonkey <br/> Enterprise account to <br/>Salesforce</span><br/><br/>
+                            <!--<apex:commandLink action="{!login}"  > class='get-started'-->
+                                <!-- <apex:image value="{!URLFOR($Resource.Images, 'Images/GetStarted.png')}" id="GetStarted" style="cursor:pointer;"/>-->
+                                <div class="btn1 btn-large yellow btn-arrow btn-arrow-right">
+                                        Get Started
+                                    <span class='arrow'></span> 
+                                </div>
+                               
+                            <!--</apex:commandLink>-->    
+                        </div>
+                    </apex:form>
+                </td>
+                <td class='right-td'>
+                    <span id='header'>SurveyMonkey for Salesforce</span><br/>
+                    <span id='sub-header'>Do more with your surveys today!</span><br/><br/>
+                    
+                    <span id='cntnt'>Our app makes it simple to send and analyze
+                    your survey directly from Salesforce, so you have access to valuable customer feedback
+                    right where you need it.</span><br/><br/>
+                    <span id='sub-cntnt'>Manage customers and their feedback from
+                    one place:</span><br/>
+                    <UL id='points'>
+                        <LI class='point'>
+                           <span class='chk'>3</span>Track employee and customer satisfaction (CSAT)
+                         </LI>
+                        <LI class='point'>
+                           <span class='chk'>3</span>Auto-send surveys after an event, training, or interaction
+                        </LI>
+                        <LI class='point'>
+                           <span class='chk'>3</span>Track your Net Promoter<span class='power'>®</span> Score—and more!
+                        </LI>
+                    </UL>
+                </td>
+            </tr>
+        </table>
+        
+    </apex:pageBlock>
+    
+
+</apex:outputPanel>
+<apex:outputPanel rendered="{!AND(is_enterprise_user,NOT(linkedOrg),SFEnabled)}">
+    <apex:form >
+    <c:customtabs data="{
+                'menu':[
+                {'name':'{!$Label.surveymonkey__Survey_Campaign}'}
+                ,{'name':'{!$Label.Touch_Rules}', 'onclick':'parent.open(\\\'/apex/{!JSENCODE(prefix)}TouchRules\\\',\\\'_self\\\');'}           
+                ,{'name':'{!$Label.Settings}', 'onclick':'parent.open(\\\'/apex/{!JSENCODE(prefix)}SurveyMonkeySettings\\\',\\\'_self\\\');'}
+                ]        
+            }"> </c:customtabs>
+    
+    <!--<c:customtabs data="{
+                'menu':[
+                {'name':'{!$Label.surveymonkey__Survey_Campaign}'}
+                ,{'name':'{!$Label.Touch_Rules}', 'onclick':'parent.open(\\\'/apex/{!JSENCODE(prefix)}TouchRules\\\',\\\'_self\\\');'}
+                ,{'name':'{!$Label.Seat_Management}', 'onclick':'parent.open(\\\'/apex/{!JSENCODE(prefix)}LicenseManagement\\\',\\\'_self\\\');'}
+                ,{'name':'{!$Label.Settings}', 'onclick':'parent.open(\\\'/apex/{!JSENCODE(prefix)}SurveyMonkeySettings\\\',\\\'_self\\\');'}
+                ]        
+            }"> </c:customtabs>-->
+    <!-- **********************************Pop up********************************************* -->
+     
+        
+       
+        <div id="overlay"></div>
+        <div id="modalMsg" style="width:565px; height: 150px; border-radius: 5px; font-family: Verdana,Arial,sans-serif; font-size: 1em;" class="HideModal ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
+        <div  class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix"><span id="ui-id-1" class="ui-dialog-title">Delete Survey Campaign</span><button type="button" onclick = "document.getElementById('modalMsg').className = 'HideModal'; document.getElementById('overlay').className = '';" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" role="button" aria-disabled="false" title="close" style="margin-left:94%;margin-top: 0.5%;margin-bottom: 0.5%;"><span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span><span class="ui-button-text" style="display: none;">close</span></button></div>
+            <div id="modal-buttons" style="text-align: center;margin-top:10px;font-family: Verdana,Arial,sans-serif; font-size: 1em;"> 
+            Are you Sure?
+            <br/><br/>
+            <input class="btn"  type="button" value="Delete Survey Campaign" onclick="DeleteRecord(true, false, false);"/>
+            <!--<input class="btn"  type="button" value="Delete Only Responses" onclick="DeleteRecord(false, true, false);"/> -->
+            <input class="btn"  type="button" value="Delete Only Responses and Recipient" onclick="DeleteRecord(false, false, true);"/>
+            </div>
+        </div>
+    <!-- **********************************Pop up********************************************* -->
+    
+    <div id="dvLoading"></div>
+          <apex:pageBlock Title="{!$Label.surveymonkey__Survey_Campaign}">  
+          
+        <apex:pageBlockButtons >
+        
+                    <apex:commandButton value="{!$Label.surveymonkey__New_Survey}" action="{!gotoSelectSelectSurvey}" title="Create a new Survey Campaign"/>
+        </apex:pageBlockButtons>
+    <apex:outputpanel id="idsoutputpanel">
+    <apex:outputText value="{!serverName}" id="theHiddenInput" style="display:none"  rendered="{!$ObjectType.SurveyMonkey__SurveyMonkeyVariables__c.fields.SurveyMonkey__Value__c.Accessible}"/>
+    <apex:outputText value="{!analyticalReportUrl}" id="theHiddenInput1" style="display:none" rendered="{!$ObjectType.SurveyMonkey__SurveyMonkeyVariables__c.fields.SurveyMonkey__Value__c.Accessible}"/>
+        <div class="full_width">
+              <apex:pageMessages id="pgmsg"/>  
+              <div id="customErrorDiv"><span id="customResponseErrors"></span></div>
+             
+               <apex:pageblocksection title="{!$Label.surveymonkey__Survey_Campaign_List}" columns="1" collapsible="false">
+               
+               <div id="tblContainer_length" class="dataTables_length" style="position: relative;top: 30px;left: 167px;z-index: 1; width:570px;">
+               <label>{!$Label.Total_Number_of_Records} : <span id="TotalRecords">0</span>
+                    
+                </label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <label>{!$Label.Number_of_Records}
+                    <select size="1" name="tblContainer_length" class="tbldropdown" aria-controls="tblContainer" id="idnumRecords" >
+                        <option value="0" selected="selected">1-2000</option>
+                    </select>
+                </label>
+              </div>  
+                <table  cellpadding="0" cellspacing="0" border="0" id="myTable" class="display cContainerId"  style="width:100%;font-size: 13px; min-width: 980px;">
+                    <thead>
+                            <tr>            
+                                            <th style="width: 160px;">
+                                       {!$Label.Actions}    
+                                    </th>              
+                                    <th>
+                                      {!$Label.Survey_Campaign_Name}  
+                                    </th>                   
+                                    <th>
+                                        {!$Label.Recipients}   
+                                    </th>                   
+                                    <th>
+                                        {!$Label.Respondents}   
+                                    </th>                   
+                                    <th style="width: 155px;">
+                                       {!$Label.Type}    
+                                    </th>
+                                    <th>
+                                        {!$Label.Owner}
+                                    </th>  
+                                     <th style="width: 155px;">
+                                        {!$Label.Send_Date}   
+                                    </th> 
+                            </tr>
+                        
+                    </thead> 
+                     <tbody id="tblbodyId"></tbody>
+                </table>
+                </apex:pageblocksection>
+        </div> 
+      
+     </apex:outputpanel>
+     </apex:pageBlock>
+    </apex:form>  
+</apex:outputPanel>
+</div>
+</apex:outputPanel>
+</apex:page>

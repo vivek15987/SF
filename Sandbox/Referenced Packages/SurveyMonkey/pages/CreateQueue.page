@@ -1,0 +1,21 @@
+<apex:page >
+<!-- controller="QueueConsoleController2" sidebar="true"  action="{!constructor}"  -->
+    <!-- <apex:messages />  
+    <apex:pageMessages />
+    <apex:form >
+
+        <apex:pageBlock title="Amazon EC2 Console">
+
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!refreshInstances}" value="Refresh"
+                    rerender="instancesTable" status="instancesStatus" />
+                <apex:actionStatus id="instancesStatus" startText="Please wait ..."></apex:actionStatus>
+            </apex:pageBlockButtons>
+            <apex:outputPanel id="instancesTable">
+                <apex:inputTextarea value="{!output}" rows="10" cols="200"/>
+            </apex:outputPanel>
+           
+        </apex:pageBlock>
+
+    </apex:form> -->
+</apex:page>

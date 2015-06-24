@@ -1,0 +1,13 @@
+<apex:page controller="SurveyMonkey.SurveyTemplatePreviewController" sidebar="false" showheader="false">
+<form name="frmS" method="post" action="/s.aspx?PREVIEW_MODE=DO_NOT_USE_THIS_LINK_FOR_COLLECTION&amp;sm=XmAYRxrB67UhPdFAhtCGhzFcGcI5eo7rab5O7nsEZS8%3d" id="frmS">
+ 
+ <apex:pageblock title="Survey Template Preview" id="surveyPreview">
+ 
+  <apex:pageMessages id="pgmsg"/> 
+ 
+            <!-- <apex:iframe src="https://www.surveymonkey.com/s.aspx?PREVIEW_MODE=DO_NOT_USE_THIS_LINK_FOR_COLLECTION&sm={!selectedTempId}" id="theFrame" scrolling="true"/> -->
+            <apex:iframe src="{!previewURL}" id="theFrame" scrolling="true"/>
+            <script>document.getElementById('theFrame').height = (window.innerHeight - 320) + 'px';</script>
+         </apex:pageblock>
+</form>
+</apex:page>

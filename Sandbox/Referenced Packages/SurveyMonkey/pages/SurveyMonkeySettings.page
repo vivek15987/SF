@@ -1,0 +1,220 @@
+<apex:page controller="SurveyMonkey.SMAppSettingsController" standardStylesheets="false" tabStyle="Survey_Campaign__tab">
+
+ <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-1.10.1.min.js')}"/>
+ <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-ui-1.10.4.min.js')}"/>    
+ <apex:stylesheet value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-ui-1.7.2.custom.css')}"/>  
+  <apex:stylesheet value="{!$Resource.SurveyMonkey__SM_Stylesheet}"/>
+  <apex:stylesheet value="{!$Resource.SurveyMonkey__sm_app}"/>
+    
+    <style>
+        .bPageBlock .detailList .dataCol{
+            width:0px;
+        }
+        
+        .dataCol label{
+            float: right;
+        }
+        
+        .radio input{
+            position: relative;
+            left: -21px;
+            float: left;
+        }
+        
+        .radio label{
+            position: relative;
+            left: -17px;
+            top: 2px;
+            float: left;
+        }
+        
+        .lbl{
+            font-weight: bold;
+        }
+        
+    </style>
+    <div id="alert" style="display:none">
+        <apex:form > 
+            <br/>
+            <p style= "display:inline;">'This account is not of type Enterprise', try with different account?</p>
+            <div style="text-align: center;margin-top:10px;" id="modal-buttons">
+                <apex:commandButton value="Ok" action="{!updateUser}" rendered="{!$ObjectType.User.Createable}" oncomplete="$j('#alert').dialog('close');"/>
+                <!--<apex:commandButton style="width:80px" value="Ok" action="{!referesh}" oncomplete="popup();afterSave()"/>
+                <apex:commandButton style="width:80px" value="Cancel" />-->
+            </div>
+         </apex:form> 
+     </div>  
+     <script type="text/javascript">  
+       var $j = jQuery.noConflict();
+       $j(document).ready( function() {
+            
+            if(!{!is_enterprise_user }){
+                if({!saveAfterRefresh})$j('#alert').dialog({title:'Invalid User', modal:true});
+            }else{
+                if({!saveAfterRefresh})$j('#popup').dialog({title:'Login Success'});
+            }
+       });
+       
+       function checkValidUser(){
+           
+            if(document.getElementById("{!$Component.funcCont.is_enterprise_user}").value == 'false'){
+                if(document.getElementById("{!$Component.funcCont.saveAfterRefresh}").value == 'true')$j('#alert').dialog({title:'Invalid User', modal:true});
+            }else{
+                if(document.getElementById("{!$Component.funcCont.saveAfterRefresh}").value == 'true')$j('#popup').dialog({title:'Login Success', modal:true});
+            }
+       }
+       
+       window.onload = function(){
+           pageLoad();
+       }
+      </script>
+    <apex:form id="funcCont">
+        <c:customtabs data="{
+            'menu':[
+            {'name':'{!$Label.Survey_Campaign}', 'onclick':'parent.open(\\\'/apex/{!prefix}SurveyCampaignList\\\',\\\'_self\\\');'}
+            ,{'name':'{!$Label.Touch_Rules}', 'onclick':'parent.open(\\\'/apex/{!prefix}TouchRules\\\',\\\'_self\\\');'}           
+            ,{'name':'{!$Label.Settings}'}
+            ]
+        
+        }"> </c:customtabs>
+        <apex:inputHidden id="is_enterprise_user" value="{!is_enterprise_user }"/>
+        <apex:inputHidden id="saveAfterRefresh" value="{!saveAfterRefresh}"/>
+        <apex:actionFunction action="{!pageLoad}" name="pageLoad" reRender="appUserName,container,saveAfterRefresh,is_enterprise_user,pageMEssage" oncomplete="document.getElementById('initialLoad').style.display = 'block';checkValidUser();callback_Monitor();" status="callControllerMethod"/>
+        <apex:actionStatus id="callControllerMethod">
+           <apex:facet name="stop">
+           </apex:facet>
+           <apex:facet name="start">
+               <apex:outputPanel >
+                   <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb;
+                   height: 100%;opacity:0.90;width:100%;"> 
+                   <!-- <div class="waitingHolder" style="top: 74.2px; width: 91px;">-->
+                    <div class="waitingHolder" style="position: fixed;left: 35%; right: 50%;" >
+                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                        <span class="waitingDescription">{!$Label.Loading}...</span>
+                        <img class="waitingImage" src="{!URLFOR($Resource.JSDataTable, 'images/Cancel.png')}" title="Please Wait..." onClick="hideStatus();" style="width: 14px;margin-top: -4px;margin-left: 10px;"/>
+                    </div>
+                </div>
+               </apex:outputPanel>
+           </apex:facet>
+        </apex:actionStatus>
+        <apex:pagemessages id="pageMEssage"></apex:pagemessages>
+    </apex:form> 
+    
+<div id="initialLoad" style="display:none">
+    <apex:form id="container">
+    
+        
+        
+         <!-- <c:customtabs data="{
+            'menu':[
+            {'name':'{!$Label.Survey_Campaign}', 'onclick':'parent.open(\\\'/apex/{!prefix}SurveyCampaignList\\\',\\\'_self\\\');'}
+            ,{'name':'{!$Label.Touch_Rules}', 'onclick':'parent.open(\\\'/apex/{!prefix}TouchRules\\\',\\\'_self\\\');'}
+            ,{'name':'{!$Label.Seat_Management}', 'onclick':'parent.open(\\\'/apex/{!prefix}LicenseManagement\\\',\\\'_self\\\');'}
+            ,{'name':'{!$Label.Settings}'}
+            ]
+        
+        }"> </c:customtabs> -->
+        
+        <apex:actionFunction name="referesh" action="{!referesh}" oncomplete="top.location = document.getElementById('{!$Component.redirectURL}').value" reRender="redirectURL"/>
+        <apex:actionFunction name="callback_Monitor" action="{!callback_Monitor}" reRender="container"  status="callControllerMethod"/>
+        <apex:inputHidden id="redirectURL" value="{!completeURL}"/>
+        <apex:pageBlock title="Application Settings" >
+            
+            
+            <apex:pageblockButtons >
+            <center>
+                <apex:commandButton value="{!$Label.surveymonkey__Save_Settings}" action="{!save}" rerender="pageMEssage" oncomplete="{!IF(callbackMonitor!=NULL && callbackMonitor != 'false','callback_Monitor()','')}"
+                rendered="{!$ObjectType.SurveyMonkey__PlaceHolderList__c.Updateable}" />
+            </center>
+            </apex:pageblockButtons>
+            <apex:actionFunction name="clearQueue" action="{!clearQueue}" reRender="queuePanel"/>
+            <apex:pageBlockSection columns="3">
+                <apex:outputLabel styleClass="lbl">{!$Label.surveymonkey__Linked_SurveyMonkey_Account}</apex:OutputLabel>
+                :
+                <apex:panelGrid columns="2">
+                    <apex:outputText id="appUserName" value="{!appUserName}" escape="true" rendered="{!$ObjectType.SurveyMonkey__SurveyMonkeySettings__c.fields.SurveyMonkey__App_User_Name__c.Accessible}"/>&nbsp;&nbsp;&nbsp;
+                    
+                    <a class="btn" style="text-decoration: blink;top: 0px;position: relative;padding: 4px;" onclick="referesh();" target="_BLANK">{!$Label.Reauthorize}</a>
+                </apex:panelGrid>
+            
+                <apex:outputLabel styleClass="lbl">{!$Label.surveymonkey__QueueName}</apex:OutputLabel>
+                :
+                <apex:panelGrid columns="2" id="queuePanel">
+                    <apex:outputText id="qname" value="{!qname.SurveyMonkey__QueueName__c}" rendered="{!$ObjectType.SurveyMonkey__CallbackResponse__c.fields.SurveyMonkey__QueueName__c.Accessible}"/>&nbsp;&nbsp;&nbsp;
+                    <a class="btn" style="text-decoration: blink;top: 0px;position: relative;padding: 4px;" onclick="clearQueue()">{!$Label.Clear}</a>
+                </apex:panelGrid> 
+                                
+                
+                <apex:outputLabel styleClass="lbl">{!$Label.surveymonkey__CallOut_Environment}</apex:OutputLabel>
+                :
+                <apex:panelGrid columns="2">
+                    <apex:outputLabel for="apiHost" value="{!$Label.surveymonkey__API_Host}" styleClass="lbl" style="padding-top: 6px;"></apex:outputLabel>
+                    <apex:inputText id="apiHost" value="{!api_Host.SurveyMonkey__Value__c}"
+                            rendered="{!$ObjectType.SurveyMonkey__SurveyMonkeyVariables__c.fields.SurveyMonkey__Value__c.Updateable}" style="width:110%;"/>
+                    <!-- <apex:outputLabel for="loginHost" value="{!$Label.Login_Host}" styleClass="lbl" style="padding-top: 6px;"></apex:outputLabel>
+                    <apex:inputText id="loginHost" value="{!login_Host.Value__c}"/> -->
+                </apex:panelGrid>
+                
+
+                <apex:outputLabel styleClass="lbl">{!$Label.surveymonkey__Callback_Monitor}</apex:OutputLabel>
+                :
+                <apex:panelGrid columns="4">
+                    <input type="radio" id="initiate" name="callbackMonitor" onclick="setCallbackValue('true')"/>
+                    <apex:outputLabel value="{!$Label.surveymonkey__Initiate}" styleClass="lbl" style="padding-top: 3px;"></apex:outputLabel>
+                    <input type="radio" id="abort" name="callbackMonitor" onclick="setCallbackValue('false')"/>
+                    <apex:outputLabel value="{!$Label.surveymonkey__Abort}" styleClass="lbl" style="padding-top: 3px;"></apex:outputLabel>
+                </apex:panelGrid>
+              
+              <apex:outputLabel styleClass="lbl">{!$Label.surveymonkey__Log_Exception}</apex:OutputLabel>
+                :
+                <apex:panelGrid columns="4">
+                    <input type="radio" id="initiateLog" name="callexceptionlog" onclick="setCallExceptionLog('true')"/>
+                    <apex:outputLabel value="{!$Label.surveymonkey__Initiate}" styleClass="lbl" style="padding-top: 3px;"></apex:outputLabel>
+                    <input type="radio" id="abortLog" name="callexceptionlog" onclick="setCallExceptionLog('false')"/>
+                    <apex:outputLabel value="{!$Label.surveymonkey__Abort}" styleClass="lbl" style="padding-top: 3px;"></apex:outputLabel>
+                </apex:panelGrid>
+              
+                
+                <apex:outputLabel styleClass="lbl">{!$Label.surveymonkey__Contact_Email}</apex:OutputLabel>
+                :
+                <apex:inputText style="width:464px;" value="{!allSettingsValues.SurveyMonkey__ContactEmail__c}" label=""
+                        rendered="{!$ObjectType.SurveyMonkey__SurveyMonkeySettings__c.fields.SurveyMonkey__ContactEmail__c.Updateable}"/>
+                
+                <apex:outputLabel ></apex:outputLabel>
+                <apex:inputCheckbox value="{!allSettingsValues.SurveyMonkey__recipientsTransfer__c}" label=""/>
+                {!$Label.surveymonkey__Attach_Survey_responses_to_contact_record_on_lead_conversion}
+            </apex:pageBlockSection>
+                        
+        </apex:pageBlock>
+        <apex:inputHidden id="callbackMonitor" value="{!callbackMonitor}"/>
+        <apex:inputHidden id="callexceptionlog" value="{!callexceptionlog}"/>
+        <script>
+            function setCallbackValue(radVal){
+                document.getElementById("{!$Component.callbackMonitor}").value = radVal;
+            }
+            if(document.getElementById("{!$Component.callbackMonitor}").value == 'true')
+                document.getElementById("initiate").checked = true;
+            else if(document.getElementById("{!$Component.callbackMonitor}").value == 'false')
+                document.getElementById("abort").checked = true;
+        </script>
+        <script>
+             function setCallExceptionLog(radVal){
+                document.getElementById("{!$Component.callexceptionlog}").value = radVal;
+            }
+             if(document.getElementById("{!$Component.callexceptionlog}").value == 'true')
+                document.getElementById("initiateLog").checked = true;
+            else if(document.getElementById("{!$Component.callexceptionlog}").value == 'false')
+                document.getElementById("abortLog").checked = true;
+        </script>
+    </apex:form>  
+</div>
+    <div id="popup" style="display:none;">
+        <apex:form >
+            <p style= "display:inline;">'Reauthorize' completed successfully.</p>
+            <br/><br/>
+            <div style="text-align: center;margin-top:10px;" id="modal-buttons">
+                <apex:commandButton value="Ok" action="{!updateUser}" oncomplete="$j('#popup').dialog('close');"/>
+            </div>
+        </apex:form>
+    </div>
+</apex:page>

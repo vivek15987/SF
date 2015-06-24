@@ -1,0 +1,353 @@
+<apex:page controller="SurveyMonkey.TabController" docType="html-4.01-strict" standardStylesheets="false" tabStyle="Survey_Campaign__tab">
+   
+    <!--<apex:includeScript value="{!URLFOR($Resource.JSDataTable, 'jquery.min.js')}"/>-->
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-1.10.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'complete.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery.dataTables.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-ui-1.10.4.min.js')}"/>    
+    <apex:stylesheet value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'demo_table_jui.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-ui-1.7.2.custom.css')}"/>  
+    <apex:stylesheet value="{!$Resource.SurveyMonkey__SM_Stylesheet}"/>
+    <apex:stylesheet value="{!$Resource.SurveyMonkey__sm_app}"/>
+    
+    <style type="text/css">
+   
+        tr.link {
+            cursor: pointer
+        }
+        tr.link td:hover {
+            background-color: gold;
+        }
+        .cContainerId th:last-child {
+            display: none;
+        }
+    
+        .header {
+            font-size: 25px;
+            display: block;
+            font-family: Arial;
+            margin-left: 500px;
+        }
+        .custPopup{
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            z-index: 9999;
+            left: 50%;
+            padding:10px;
+            position: absolute;
+            /* These are the 3 css properties you will need to change so the popup 
+            displays in the center of the screen. First set the width. Then set 
+            margin-left to negative half of what the width is. You can add 
+            the height property for a fixed size pop up if you want.*/
+            width: 500px;
+            left: 300px;
+            top:25px;
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: absolute;
+            width: 100%;
+            height: 800%;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+        }
+        TR.selected, TR.odd.selected TD.sorting_1 , TR.even.selected TD.sorting_1 {
+            background-color: darkorange;
+        }
+        .mainTitle{
+            position: absolute;
+        }
+        .no-display{
+            display: none;
+        }
+        
+        .warning INPUT[type=submit]{
+            float: right;
+            position: relative;
+            margin-top: 8px;
+        }
+        .warning{
+            background-color: yellow;
+            border: 2px solid burlywood;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 5px;
+            padding-bottom: 20px;
+            display: block;
+        }
+        #errorCreatTemp,.error{
+            background-color: #FF9999;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            display: block;
+        }
+        
+        #email-title{
+            position: relative;
+            top: -33px;
+            left: 176px;
+        }
+        .pbBody a.green-link{
+            color: green;
+            font-size: 14px;
+        }
+        #modal-buttons INPUT[value=Save] {
+            display: none;
+        }
+        #modal-buttons INPUT[value=Yes],#modal-buttons INPUT[value=No] {
+            display: inline;
+        }
+        
+        #modal-buttons.save-mode INPUT[value=Save] {
+            display: inline;
+        }
+        #modal-buttons.save-mode INPUT[value=Yes],#modal-buttons.save-mode INPUT[value=No] {
+            display: none;
+        }
+    </style>      
+    
+    <script type="text/javascript">
+        var $j = jQuery.noConflict();
+        var emailChanged = false;
+        function select(a){
+            $j(".selected").removeClass('selected');
+            $j(a).parent().parent().addClass('selected');
+        }
+
+        function loadGrid(){
+             $j('.cContainerId').dataTable( {
+                    "bJQueryUI": true,
+                    "sPaginationType": "full_numbers"
+                    //,"columns": [{ "orderDataType": "dom-text", "type": "numeric" }]
+                });
+        }
+        $j(document).ready( function() {
+           loadGrid();
+            //jQuery('.cContainerId TR:first-child').addClass("selected");    
+       });    
+       function continueBtnClick(conditional){
+           if(!conditional || !$j('.error,.warning,.message').length){
+               if(emailChanged){
+                   $j('#modal-buttons').removeClass('save-mode');
+                   $j('#dialog-Mode-change').dialog({title:'{!$Label.surveymonkey__Save_As_new_Email_Template}', modal:true, width: 650, height:285});
+               }else {
+                    doContinue();
+               }
+           }
+       }
+       
+       function saveTemplate(){
+           $j('#modal-buttons').addClass('save-mode');
+           $j('#dialog-Mode-change').dialog({title:'Save As new Email Template', modal:true, width: 650, height:285});
+       }
+       function afterSave(){
+           if(!$j('#errorCreatTemp').length){
+               refreshPage();
+           }
+       }
+       function saveAftrEmail(){
+           if(!$j('#errorCreatTemp').length){
+               doContinue();
+           }
+       }
+       function removeSpecial(){
+           var stringToReplace = $j('.tempName').val();
+           var specialChars = " !@#$^&%*()+=-[]\/{}|:<>?,.";
+           for (var i = 0; i < specialChars.length; i++) {
+               stringToReplace = stringToReplace .replace(new RegExp("\\" + specialChars[i], 'gi'), '');
+           }
+           $j('.tempDevName').val(stringToReplace);
+       }
+       
+       window.onload = function(){
+           pageLoad();
+           
+       }
+    </script>
+                
+    
+    <apex:form >
+        <c:customtabs data="{
+            'menu':[
+            {'name':'{!$Label.Survey_Template}', 'onclick':'goToSurveyTemplate()'}
+            ,{'name':'{!$Label.Email_Template}'}
+            ,{'name':'{!$Label.Recipients}', 'onclick':'goToSelectCampaigntype()'}
+            ,{'name':'{!$Label.Survey_Confirmation}', 'onclick':'goToSurveyCampaignConfirmation()'}
+            ]
+        
+        }"></c:customtabs>
+        <apex:actionFunction action="{!emailController.pageLoad}" name="pageLoad" reRender="container,templateChange" oncomplete="document.getElementById('initialLoad').style.display = 'block';loadGrid();" status="status2"/>
+        
+    </apex:form>
+    <div id="dialog-Mode-change" style="display:none">
+        <apex:form id="templateChange">
+        <br/>
+        <p style= "display:inline;">{!$Label.Would_you_like_to_save_the_changes_as_new_email_template}</p>
+        <br/><br/>
+        <b>{!$Label.Folder} :</b>
+        <br/> 
+        <apex:selectList value="{!emailController.selectedFolder}" size="1" styleClass="folder">
+            <apex:selectOptions value="{!emailController.folders}"></apex:selectOptions>    
+        </apex:selectList>
+        <br/><br/>
+        <b>{!$Label.surveymonkey__New_Template_Name} :</b><br/> 
+        <apex:inputText id="newTempName" value="{!emailController.newTemplateName}" style="width:98%" styleClass="tempName" onchange="removeSpecial()"
+                                                 rendered="{!$ObjectType.EmailTemplate.fields.Name.Createable}" />
+       <apex:inputText id="newTempDevName" value="{!emailController.newTemplateDevName}" style="width:98%;display:none;" styleClass="tempDevName"
+                                                rendered="{!$ObjectType.EmailTemplate.fields.DeveloperName.Createable}" />
+        <div style="text-align: center;margin-top:10px;" id="modal-buttons">
+            <apex:outputPanel id="emailSaveError" >
+                <apex:outputText rendered="{!NOT(ISNULL(emailController.createEmialError))}">
+                    <div id="errorCreatTemp">{!emailController.createEmialError}</div>
+                    <br/>
+                </apex:outputText>
+                <apex:outputText rendered="{!ISNULL(emailController.createEmialError)}">
+                    <br/>  
+                    <br/>
+                </apex:outputText>
+            </apex:outputPanel>
+            
+            <apex:inputTextarea value="{!emailController.selectedtEmplate.body}" styleClass="selectedtEmplate2" style="display:none"
+                                                            rendered="{!$ObjectType.EmailTemplate.fields.Body.Createable}" />
+            <apex:commandButton style="width:80px" value="{!$Label.surveymonkey__Save}" rerender="emailSaveError" onclick="$j('.selectedtEmplate2').val($j('.selectedtEmplate').val());" action="{!emailController.createEmailTemplate}" oncomplete="afterSave()"
+            rendered="{!$ObjectType.EmailTemplate.Createable}"/>
+            <apex:commandButton style="width:80px" value="{!$Label.surveymonkey__Yes}" rerender="emailSaveError" onclick="$j('.selectedtEmplate2').val($j('.selectedtEmplate').val());" action="{!emailController.createEmailTemplate}" oncomplete="saveAftrEmail()" 
+            rendered="{!$ObjectType.EmailTemplate.Createable}"/>
+            <input class="btn" style="width:80px" type="button" value="{!$Label.No}" onclick="doContinue();"/>
+        </div>
+        </apex:form>
+    </div>
+    
+    <apex:form id="container">
+    <div id="initialLoad" style="display:none">
+        <apex:actionFunction name="goToSurveyTemplate" action="{!goToSurveyTemplate}"></apex:actionFunction>
+        <apex:actionFunction name="goToSelectCampaigntype" action="{!goToSelectCampaigntype}"></apex:actionFunction>
+        <apex:actionFunction name="goToSurveyCampaignConfirmation" action="{!goToSurveyCampaignConfirmation}"></apex:actionFunction>
+        <apex:actionFunction name="refreshPage" reRender="completePage" action="{!emailController.pageLoad}" oncomplete="$j('#dialog-Mode-change').dialog('destroy');loadGrid();"/> 
+        <apex:actionFunction name="doContinue" action="{!emailController.doContinue}" /> 
+        <apex:actionFunction name="validateEmail" rerender="errs,pageMsg" action="{!emailController.validateEmail}" oncomplete="continueBtnClick(true)"/> 
+        <apex:pageBlock mode="edit">
+            <apex:pageMessages id="pageMsg"></apex:pageMessages>
+            <apex:pageBlockSection columns="2" id="completePage"> 
+                
+                <apex:pageBlock Title="{!$Label.surveymonkey__Select_an_Email_Template}">
+      
+                        <apex:outputPanel id="emailTemplates">
+                             <table border="0" cellpadding="0" cellspacing="0" class="display cContainerId" style="width:100%;font-size: 13px;">
+                                <thead>
+                                        <tr>
+                                                <th style="display:none"></th> 
+                                                <th>{!$Label.Template_Name}</th> 
+                                                <th>{!$Label.Owner}</th> 
+                                                <th></th> 
+                                        </tr>
+                                </thead> 
+                                <tbody>
+                                <apex:repeat value="{!emailController.emailTemplates}" var="emailTemp">
+                                    <tr class="{!IF(emailTemp.id == emailController.selectedEmailTempId, 'selected','')}">
+                                         <td style="display:none">1</td>
+                                        <td>
+                                            <apex:outputText rendered="{!$ObjectType.EmailTemplate.Accessible}"
+>
+                                                <apex:commandLink action="{!emailController.findEmailContent}" onclick="select(this);emailChanged=false;"  value="{!emailTemp.name}" rerender="emailPreview,newTempName" status="status2">
+                                                    <apex:param name="survy" value="{!emailTemp.id}" assignTo="{!emailController.selectedEmailTempId}"/>
+                                                </apex:commandLink>
+                                            </apex:outputText>
+                                            
+                                        </td>
+                                       
+                                         <td>
+                                            <a href="/{!emailTemp.OwnerId}" target="_blank">{!emailController.usersMap[emailTemp.OwnerId].alias}</a>
+                                        </td>
+                                        <td style="display:none">1</td>
+                                    </tr>
+                                </apex:repeat>
+                                </tbody>
+                            </table>
+                            <br></br><a class="smLink" href="/00X" target="_BLANK">{!$Label.Manage_Email_Templates}</a>
+                        </apex:outputPanel>
+                </apex:pageBlock>
+                <apex:outputPanel id="emailPreview" >
+                    <apex:outputPanel id="errs">
+                        <apex:outputPanel rendered="{!NOT(emailController.isValid)}" styleClass="error">
+                            Please add (&#123;!SurveyMonkey.SurveyLink&#125;) and (&#123;!SurveyMonkey.RemoveLink&#125;) placeholder to your selected template before continuing.
+                        </apex:outputPanel>
+                        
+                        <apex:outputPanel rendered="{!IF(AND(emailController.isValid,emailController.invalidPlaceHolderCount>5), true, false)}" styleClass="warning">
+                            Your selected template contains placeholders we cannot populate. Are you sure you want to use the selected template?
+                            <apex:commandButton value="Continue" onclick="continueBtnClick();return false;" rendered="{!$ObjectType.SurveyMonkey__Collector__c.Updateable}"/>
+                        </apex:outputPanel> 
+                    </apex:outputPanel>
+                    <apex:outputPanel styleClass="smallHead">
+                        <apex:pageblock title="{!$Label.surveymonkey__Email_Template_Preview}:" rendered="{!NOT(ISNULL(emailController.selectedtEmplate))}">
+                            <apex:panelGroup >
+                                <label>{!$Label.EmailTemplateName}</label> <span id="email-title">{!emailController.selectedtEmplate.name}</span>
+                                <br/>
+                                
+                               <!-- <b>Reply To :&nbsp;&nbsp;</b> <apex:inputText id="ReplyTo" value="{!emailController.replyToAdd}" style="width:450px;"           <br/>-->
+                                <label>{!$Label.EmailTReplyTo}</label> <apex:inputText id="emailFrom" value="{!emailController.fromAdd}" style="width:450px;" 
+                                                                                       rendered="{!$ObjectType.SurveyMonkey__Collector__c.fields.SurveyMonkey__Email_from_address__c.Createable}" disabled="false"/><br/>
+                                <label>{!$Label.surveymonkey__Subject} </label> <apex:inputText onchange="emailChanged=true;" id="emailSubject" value="{!emailController.selectedtEmplate.subject}" style="width:450px;" 
+                                                                                       rendered="{!$ObjectType.EmailTemplate.fields.Subject.Createable}" />
+                         
+                                <br/>
+                                <br/>
+                                <apex:inputTextarea onchange="emailChanged=true;" style="width:100%" id="emailBody" rows="20" cols="135" value="{!emailController.selectedtEmplate.body}" styleClass="selectedtEmplate"
+                                                    rendered="{!$ObjectType.EmailTemplate.fields.Body.Createable}" />
+                            </apex:panelGroup>
+                            <!---<apex:commandLink target="_BLANK" styleClass="green-link" action="{!emailController.redirectSendEmail}" value="{!$Label.Send_Test_Email}"/>
+                            &nbsp;|&nbsp;--->
+                            <apex:commandLink styleClass="green-link" value="{!$Label.surveymonkey__Save_Template}" onclick="saveTemplate(); return false;"/>
+                            
+                        </apex:pageblock>
+                        
+                    </apex:outputPanel> 
+                    <apex:pageblock title="{!$Label.surveymonkey__Important_message}" rendered="{!ISNULL(emailController.selectedtEmplate)}">    
+                        <apex:outputpanel layout="block" style="font-style:italic;font-size: 15px;" >
+                            <p>"SurveyMonkey placeholders (&#123;!SurveyMonkey.SurveyLink&#125;), (&#123;!SurveyMonkey.RemoveLink&#125;) must be included in your selected template. 
+                            FirstName, LastName and Email placeholders from both Contacts and Leads will also be populated if present."</p>
+
+                        </apex:outputpanel>
+                    </apex:pageblock>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            
+            <apex:PageBlockButtons >
+                <apex:commandButton value="{!$Label.surveymonkey__Back}" onclick="if(confirm('Your changes will be lost.. are you sure?')){returnToPrevious();} return false;"/>    
+                <apex:commandButton value="{!$Label.surveymonkey__EmailTCancel}"  action="{!cancel}"/>       
+                <apex:commandButton value="{!$Label.surveymonkey__Continue}" onclick="validateEmail();return false;"/> 
+                <input type="button" src="s.gif" onclick="pageLoad();" class="btn" title="Refresh" style="height: 22px;background-position: 2px 3px;background: url(/img/alohaSkin/sync.png) top left no-repeat;width: 23px;background-position: 2px 2px;vertical-align: bottom;"/>
+            </apex:PageBlockButtons>
+            <apex:actionfunction name="returnToPrevious" action="{!goToSurveyTemplate}"/>
+        </apex:pageBlock>
+        </div>
+    </apex:form>     
+    <apex:actionStatus id="status2" >
+          <apex:facet name="start">
+                <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb;
+                   height: 100%;opacity:0.90;width:100%;"> 
+                   <!-- <div class="waitingHolder" style="top: 74.2px; width: 91px;">-->
+                    <div class="waitingHolder" style="position: fixed;left: 35%; right: 50%;" >
+                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                        <span class="waitingDescription">{!$Label.Loading}...</span>
+                        <img class="waitingImage" src="{!URLFOR($Resource.JSDataTable, 'images/Cancel.png')}" title="Please Wait..." onClick="hideStatus();" style="width: 14px;margin-top: -4px;margin-left: 10px;"/>
+                    </div>
+                </div>
+            </apex:facet>
+    </apex:actionStatus>  
+            
+</apex:page>

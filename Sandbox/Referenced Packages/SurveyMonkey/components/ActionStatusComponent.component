@@ -1,0 +1,54 @@
+<apex:component >
+<style>
+  .waitingSearchDiv{
+    z-index:99999;
+  }
+</style>
+   <apex:outputpanel >
+        <apex:actionstatus id="status">
+             <apex:facet name="start">
+                <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb;
+                   height: 100%;opacity:0.90;width:100%;"> 
+                   <!-- <div class="waitingHolder" style="top: 74.2px; width: 91px;">-->
+                    <div class="waitingHolder" style="position: fixed;left: 35%; right: 50%;" >
+                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                        <span class="waitingDescription">{!$Label.Loading}...</span>
+                        <img class="waitingImage" src="{!URLFOR($Resource.JSDataTable, 'images/Cancel.png')}" title="Please Wait..." onClick="hideStatus();" style="width: 14px;margin-top: -4px;margin-left: 10px;"/>
+                    </div>
+                </div>
+            </apex:facet>
+        </apex:actionstatus>
+        <script>
+                function hideStatus(){
+                    document.getElementById('j_id0:j_id9:j_id42:j_id44:j_id45:status.start').style.display='none';
+                }
+        </script>
+    </apex:outputpanel>
+     <apex:outputpanel >
+             <apex:actionstatus id="status2">
+                  <apex:facet name="start">
+                      <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb;
+                       height: 100%;opacity:0.65;width:100%;"> 
+                    <div class="waitingHolder" style="top: 74.2px; width: 91px;">
+                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                        <span class="waitingDescription">Loading...</span>
+                    </div>
+                </div>
+            </apex:facet>
+        </apex:actionstatus>
+    </apex:outputpanel>
+    <apex:outputpanel >
+             <apex:actionstatus id="siteStatus">
+                  <apex:facet name="start">
+                      <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb;
+                       height: 100%;opacity:0.90;width:100%;"> 
+                       <!-- <div class="waitingHolder" style="top: 74.2px; width: 91px;">-->
+                       <div class="waitingHolder" style="position: fixed;left: 35%; right: 50%;" >
+                        <img class="waitingImage" src="{!URLFOR($Resource.images, '/Images/preloader.gif')}" title="Please Wait..." />
+                        <span class="waitingDescription">Loading...</span>
+                    </div>
+                </div>
+            </apex:facet>
+        </apex:actionstatus>
+    </apex:outputpanel>
+</apex:component>

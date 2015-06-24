@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <customSettingsVisibility>Protected</customSettingsVisibility>
+    <description>inContact agent information, such as username, station, phone number.</description>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Password__c</fullName>
+        <deprecated>false</deprecated>
+        <description>inContact agent&apos;s password</description>
+        <externalId>false</externalId>
+        <label>Password</label>
+        <length>80</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PhoneNumber__c</fullName>
+        <deprecated>false</deprecated>
+        <description>inContact agent&apos;s phone number</description>
+        <externalId>false</externalId>
+        <label>PhoneNumber</label>
+        <length>25</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>StationID__c</fullName>
+        <deprecated>false</deprecated>
+        <description>inContact agent&apos;s station id</description>
+        <externalId>false</externalId>
+        <label>StationID</label>
+        <length>25</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Username__c</fullName>
+        <deprecated>false</deprecated>
+        <description>inContact agent&apos;s username</description>
+        <externalId>false</externalId>
+        <label>Username</label>
+        <length>80</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>inContact User</label>
+</CustomObject>

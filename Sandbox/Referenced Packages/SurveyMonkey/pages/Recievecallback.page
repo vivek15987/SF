@@ -1,0 +1,19 @@
+<apex:page controller="SurveyMonkey.Recievecallbackcontroller" sidebar="true" >
+
+<apex:form >
+<apex:pageMessages ></apex:pageMessages>
+<apex:pageBlock title="Recieve message - callback response">
+
+            <apex:pageBlockButtons >
+             <apex:commandButton action="{!turnonswitch}" value="Turn on Switch" rendered="{!AND(switchActive,$ObjectType.SurveyMonkey__CallbackResponse__c.Updateable)}"/>
+                <apex:commandButton action="{!refreshInstances}" value="Retrieve"/>
+                 <apex:commandButton action="{!initiateSelfbatch}" value="Initiate Self Scheduler" rendered="{!$ObjectType.SurveyMonkey__CallbackResponse__c.Updateable}"/>
+                  <apex:commandButton action="{!abortSelfbatch}" value="Abort Self Scheduler" rendered="{!$ObjectType.SurveyMonkey__CallbackResponse__c.Updateable}"/>
+                     
+                 </apex:pageBlockButtons>    
+                 
+ </apex:pageBlock>     
+          
+</apex:form>
+
+</apex:page>

@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>API_Host</fullName>
+        <categories>Settings Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Host</shortDescription>
+        <value>API Host</value>
+    </labels>
+    <labels>
+        <fullName>Abort</fullName>
+        <categories>Settings Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Abort</shortDescription>
+        <value>Off</value>
+    </labels>
+    <labels>
+        <fullName>Actions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Actions</shortDescription>
+        <value>Actions</value>
+    </labels>
+    <labels>
+        <fullName>Add_Rule</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Add Rule</shortDescription>
+        <value>Add Rule</value>
+    </labels>
+    <labels>
+        <fullName>And</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>And</shortDescription>
+        <value>and</value>
+    </labels>
+    <labels>
+        <fullName>Apply_Delay</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Apply Delay</shortDescription>
+        <value>Delay</value>
+    </labels>
+    <labels>
+        <fullName>Attach_Survey_responses_to_contact_record_on_lead_conversion</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Attach Survey responses to contact record on lead conversion</shortDescription>
+        <value>Attach Survey responses to contact record on lead conversion.</value>
+    </labels>
+    <labels>
+        <fullName>Back</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Back</shortDescription>
+        <value>Back</value>
+    </labels>
+    <labels>
+        <fullName>Begining</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Begining</shortDescription>
+        <value>Start</value>
+    </labels>
+    <labels>
+        <fullName>CallOut_Environment</fullName>
+        <categories>Settings Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CallOut Environment</shortDescription>
+        <value>CallOut Environment</value>
+    </labels>
+    <labels>
+        <fullName>Callback_Monitor</fullName>
+        <categories>Settings Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Callback Monitor</shortDescription>
+        <value>Response Sync</value>
+    </labels>
+    <labels>
+        <fullName>CampaignName</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CampaignName</shortDescription>
+        <value>Campaign Name</value>
+    </labels>
+    <labels>
+        <fullName>Cancel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>Clear</fullName>
+        <categories>Settings Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Clear</shortDescription>
+        <value>Clear</value>
+    </labels>
+    <labels>
+        <fullName>Contact_Email</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Email</shortDescription>
+        <value>Contact Email</value>
+    </labels>
+    <labels>
+        <fullName>Continue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Continue</shortDescription>
+        <value>Continue</value>
+    </labels>
+    <labels>
+        <fullName>Custom_Recipient_Filters</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Custom Recipient Filters</shortDescription>
+        <value>Custom Recipient Filters</value>
+    </labels>
+    <labels>
+        <fullName>Custom_Recipient_filter</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Custom Recipient filter</shortDescription>
+        <value>Custom Recipient filter</value>
+    </labels>
+    <labels>
+        <fullName>Delay</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delay</shortDescription>
+        <value>Delay</value>
+    </labels>
+    <labels>
+        <fullName>Delay_of</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delay of</shortDescription>
+        <value>Delay of</value>
+    </labels>
+    <labels>
+        <fullName>Edit</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Edit</shortDescription>
+        <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>EmailTCancel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EmailTCancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>EmailTReplyTo</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EmailTReplyTo</shortDescription>
+        <value>Reply-To</value>
+    </labels>
+    <labels>
+        <fullName>EmailTemplateName</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EmailTemplateName</shortDescription>
+        <value>Template Name</value>
+    </labels>
+    <labels>
+        <fullName>Email_Template</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email Template</shortDescription>
+        <value>Email Template</value>
+    </labels>
+    <labels>
+        <fullName>Email_Template_Preview</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Email Template Preview</shortDescription>
+        <value>Email Template Preview</value>
+    </labels>
+    <labels>
+        <fullName>Ending</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Ending</shortDescription>
+        <value>End</value>
+    </labels>
+    <labels>
+        <fullName>Existing_List_View</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Existing List View</shortDescription>
+        <value>Existing List View</value>
+    </labels>
+    <labels>
+        <fullName>Existing_Report</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Existing Report</shortDescription>
+        <value>Existing Report</value>
+    </labels>
+    <labels>
+        <fullName>Field</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field</shortDescription>
+        <value>Field</value>
+    </labels>
+    <labels>
+        <fullName>Filter_Matches</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Filter Matches</shortDescription>
+        <value>Matching Recipients</value>
+    </labels>
+    <labels>
+        <fullName>Folder</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Folder</shortDescription>
+        <value>Folder</value>
+    </labels>
+    <labels>
+        <fullName>From</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>From</shortDescription>
+        <value>Reply-To</value>
+    </labels>
+    <labels>
+        <fullName>From_Address</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>From Address</shortDescription>
+        <value>From Address</value>
+    </labels>
+    <labels>
+        <fullName>Important_message</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Important message</shortDescription>
+        <value>Important message!</value>
+    </labels>
+    <labels>
+        <fullName>Initiate</fullName>
+        <categories>Settings Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Initiate</shortDescription>
+        <value>On</value>
+    </labels>
+    <labels>
+        <fullName>Last_Modified</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Last Modified</shortDescription>
+        <value>Last Modified</value>
+    </labels>
+    <labels>
+        <fullName>Link_to_OAuth_page_in_Salesforce</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to OAuth page in Salesforce</shortDescription>
+        <value>Link to OAuth page in Salesforce</value>
+    </labels>
+    <labels>
+        <fullName>Linked_SurveyMonkey_Account</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Linked SurveyMonkey Account</shortDescription>
+        <value>Linked SurveyMonkey Account</value>
+    </labels>
+    <labels>
+        <fullName>Loading</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Loading</shortDescription>
+        <value>Loading</value>
+    </labels>
+    <labels>
+        <fullName>Log_Exception</fullName>
+        <categories>Settings Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Log Exception</shortDescription>
+        <value>Log Exception</value>
+    </labels>
+    <labels>
+        <fullName>Manage_Email_Templates</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Manage Email Templates</shortDescription>
+        <value>Manage email templates</value>
+    </labels>
+    <labels>
+        <fullName>Manage_Your_Surveys</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Manage Your Surveys</shortDescription>
+        <value>Manage surveys</value>
+    </labels>
+    <labels>
+        <fullName>MergeFieldMap</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>MergeFieldMap</shortDescription>
+        <value>({!Contact.FirstName},[FirstName]),
+({!Contact.LastName},[LastName]),
+({!Contact.Email},[Email]),
+({!Lead.FirstName},[FirstName]),
+({!Lead.LastName},[LastName]),
+({!Lead.Email},[Email]),
+({!SurveyMonkey.RemoveLink},[RemoveLink]),
+({!SurveyMonkey.SurveyLink},[SurveyLink])</value>
+    </labels>
+    <labels>
+        <fullName>Method_of_Sending</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Method of Sending</shortDescription>
+        <value>Type</value>
+    </labels>
+    <labels>
+        <fullName>New_Survey</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New Survey</shortDescription>
+        <value>New Survey</value>
+    </labels>
+    <labels>
+        <fullName>New_Template_Name</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New Template Name</shortDescription>
+        <value>New Template Name</value>
+    </labels>
+    <labels>
+        <fullName>No</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No</shortDescription>
+        <value>No</value>
+    </labels>
+    <labels>
+        <fullName>Number_of_Records</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Number of Records</shortDescription>
+        <value>Showing Records</value>
+    </labels>
+    <labels>
+        <fullName>Operator</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Operator</shortDescription>
+        <value>Operator</value>
+    </labels>
+    <labels>
+        <fullName>Owner</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Owner</shortDescription>
+        <value>Owner</value>
+    </labels>
+    <labels>
+        <fullName>Preview</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Preview</shortDescription>
+        <value>Preview</value>
+    </labels>
+    <labels>
+        <fullName>QueueName</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>QueueName</shortDescription>
+        <value>Queue Name</value>
+    </labels>
+    <labels>
+        <fullName>Reauthorize</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Reauthorize</shortDescription>
+        <value>Reauthorize</value>
+    </labels>
+    <labels>
+        <fullName>Recipient_Filter_Source</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recipient Filter Source</shortDescription>
+        <value>Recipient Filters</value>
+    </labels>
+    <labels>
+        <fullName>Recipient_Source</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recipient Source</shortDescription>
+        <value>Recipient Source</value>
+    </labels>
+    <labels>
+        <fullName>Recipients</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recipients</shortDescription>
+        <value>Recipients</value>
+    </labels>
+    <labels>
+        <fullName>Reply_to</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Reply to</shortDescription>
+        <value>Reply to</value>
+    </labels>
+    <labels>
+        <fullName>Respondents</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Respondents</shortDescription>
+        <value>Respondents</value>
+    </labels>
+    <labels>
+        <fullName>Salesforce_Oauth</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Salesforce Oauth</shortDescription>
+        <value>Salesforce Oauth</value>
+    </labels>
+    <labels>
+        <fullName>Save</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>Save_As_new_Email_Template</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save As new Email Template</shortDescription>
+        <value>Save As new Email Template</value>
+    </labels>
+    <labels>
+        <fullName>Save_Settings</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save Settings</shortDescription>
+        <value>Save Settings</value>
+    </labels>
+    <labels>
+        <fullName>Save_Template</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save Template</shortDescription>
+        <value>Save as new email template</value>
+    </labels>
+    <labels>
+        <fullName>Select_List_View</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Select List View</shortDescription>
+        <value>List View</value>
+    </labels>
+    <labels>
+        <fullName>Select_Method_of_Sending</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Select Method of Sending</shortDescription>
+        <value>Select Type</value>
+    </labels>
+    <labels>
+        <fullName>Select_Recipients</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Select Recipients</shortDescription>
+        <value>Select Recipients</value>
+    </labels>
+    <labels>
+        <fullName>Select_Report</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Select Report</shortDescription>
+        <value>Select Report</value>
+    </labels>
+    <labels>
+        <fullName>Select_a_Survey_Template</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Select a Survey Template</shortDescription>
+        <value>Select a Survey Template</value>
+    </labels>
+    <labels>
+        <fullName>Select_an_Email_Template</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Select an Email Template</shortDescription>
+        <value>Select an Email Template</value>
+    </labels>
+    <labels>
+        <fullName>Send_Date</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Send Date</shortDescription>
+        <value>Send Date</value>
+    </labels>
+    <labels>
+        <fullName>Send_Test_Email</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Send Test Email</shortDescription>
+        <value>Send Test Email</value>
+    </labels>
+    <labels>
+        <fullName>Send_every</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Send every</shortDescription>
+        <value>Frequency</value>
+    </labels>
+    <labels>
+        <fullName>Send_no_more_than</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Send no more than</shortDescription>
+        <value>Send no more than</value>
+    </labels>
+    <labels>
+        <fullName>Settings</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Settings</shortDescription>
+        <value>Settings</value>
+    </labels>
+    <labels>
+        <fullName>Subject</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Subject</shortDescription>
+        <value>Subject</value>
+    </labels>
+    <labels>
+        <fullName>Survey_Campaign</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Survey Campaign</shortDescription>
+        <value>Surveys</value>
+    </labels>
+    <labels>
+        <fullName>Survey_Campaign_List</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Survey Campaign List</shortDescription>
+        <value>Survey List</value>
+    </labels>
+    <labels>
+        <fullName>Survey_Campaign_Name</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Survey Campaign Name</shortDescription>
+        <value>Survey Name</value>
+    </labels>
+    <labels>
+        <fullName>Survey_Confirmation</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Survey Confirmation</shortDescription>
+        <value>Survey Confirmation</value>
+    </labels>
+    <labels>
+        <fullName>Survey_Name</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Survey Name</shortDescription>
+        <value>Survey Name</value>
+    </labels>
+    <labels>
+        <fullName>Survey_Preview</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Survey Preview</shortDescription>
+        <value>Survey Preview</value>
+    </labels>
+    <labels>
+        <fullName>Survey_Template</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Survey Template</shortDescription>
+        <value>Survey Template</value>
+    </labels>
+    <labels>
+        <fullName>Template_Name</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template Name</shortDescription>
+        <value>Template Name</value>
+    </labels>
+    <labels>
+        <fullName>Total_Number_of_Records</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Total Number of Records</shortDescription>
+        <value>Total Number of Records</value>
+    </labels>
+    <labels>
+        <fullName>Touch_Rules</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Touch Rules</shortDescription>
+        <value>Touch Rules</value>
+    </labels>
+    <labels>
+        <fullName>Trigger_Delay_Type</fullName>
+        <categories>This is used for the Trigger Delay Type</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Trigger Delay Type</shortDescription>
+        <value>Hours</value>
+    </labels>
+    <labels>
+        <fullName>Triggered_Filters</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Triggered Filters</shortDescription>
+        <value>Triggered Filters</value>
+    </labels>
+    <labels>
+        <fullName>Type</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Type</shortDescription>
+        <value>Type</value>
+    </labels>
+    <labels>
+        <fullName>Value</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Value</shortDescription>
+        <value>Value</value>
+    </labels>
+    <labels>
+        <fullName>Would_you_like_to_save_the_changes_as_new_email_template</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Would you like to save the changes as new email template</shortDescription>
+        <value>Would you like to save the changes as new email template?</value>
+    </labels>
+    <labels>
+        <fullName>Yes</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Yes</shortDescription>
+        <value>Yes</value>
+    </labels>
+    <labels>
+        <fullName>on</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>on</shortDescription>
+        <value>on</value>
+    </labels>
+    <labels>
+        <fullName>surveys_every</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>surveys every</shortDescription>
+        <value>surveys every</value>
+    </labels>
+</CustomLabels>

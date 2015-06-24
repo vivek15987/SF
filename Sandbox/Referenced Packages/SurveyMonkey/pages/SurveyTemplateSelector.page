@@ -1,0 +1,270 @@
+<apex:page tabStyle="Survey_Campaign__tab" controller="SurveyMonkey.TabController" docType="html-4.01-strict" >
+    
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-1.10.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'complete.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery.dataTables.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'demo_table_jui.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-ui-1.7.2.custom.css')}"/>  
+    <apex:stylesheet value="{!$Resource.SurveyMonkey__SM_Stylesheet}"/>
+    <apex:stylesheet value="{!$Resource.SurveyMonkey__sm_app}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-ui-1.10.4.min.js')}"/>
+    <script src="/soap/ajax/19.0/connection.js" type="text/javascript" /> 
+    
+    <style type="text/css">
+   
+        tr.link {
+            cursor: pointer
+        }
+        tr.link td:hover {
+            background-color: gold;
+        }
+        .cContainerId th:last-child {
+            display: none;
+        }
+    
+        .header {
+            font-size: 25px;
+            display: block;
+            font-family: Arial;
+            margin-left: 500px;
+        }
+        .custPopup{
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            z-index: 9999;
+            left: 50%;
+            padding:10px;
+            position: absolute;
+            /* These are the 3 css properties you will need to change so the popup 
+            displays in the center of the screen. First set the width. Then set 
+            margin-left to negative half of what the width is. You can add 
+            the height property for a fixed size pop up if you want.*/
+            width: 500px;
+            left: 300px;
+            top:25px;
+        }
+         .pbBody a.green-link{
+            color: green;
+            font-size: 14px;
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: absolute;
+            width: 100%;
+            height: 800%;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+        }
+        TR.selected, TR.odd.selected TD.sorting_1 , TR.even.selected TD.sorting_1 {
+            background-color: darkorange;
+        }
+        .mainTitle{
+            position: absolute;
+        }
+        .no-display{
+            display: none;
+        }
+        #frm-hover {
+            position:absolute;
+            background: transparent;
+        }
+        #frm-hover:hover{
+            cursor: pointer;
+            background-color: transparent;
+            border: 2px solid blue;
+            opacity: .18;
+        }
+    </style>    
+    
+    <script type="text/javascript">
+        jQuery.noConflict();
+        var callSignOut = false;
+        
+        function select(a){
+         
+            jQuery(".selected").removeClass('selected');
+            jQuery(a).parent().parent().addClass('selected');
+        }
+        
+        jQuery(document).ready( function() {
+            var table =jQuery('.cContainerId').dataTable( {
+                    "bJQueryUI": true,
+                    "sPaginationType": "full_numbers",
+                    "order": [ 2, 'asc' ] 
+                    //,"columns": [{ "orderDataType": "dom-text", "type": "numeric" }]
+                });
+            jQuery(jQuery('.cContainerId TH').get(2)).find(".ui-icon").removeClass("ui-icon-carat-2-n-s").addClass('ui-icon-triangle-1-s');
+       });    
+       
+       function RenderTable(){
+               var table =jQuery('.cContainerId').dataTable( {
+                        "bJQueryUI": true,
+                        "sPaginationType": "full_numbers",
+                        "order": [ 2, 'asc' ] 
+                        //,"columns": [{ "orderDataType": "dom-text", "type": "numeric" }]
+                    });
+                jQuery(jQuery('.cContainerId TH').get(2)).find(".ui-icon").removeClass("ui-icon-carat-2-n-s").addClass('ui-icon-triangle-1-s');
+                //alert(document.getElementById("{!$Component.funcCont.malformedToken}").value);
+                if(document.getElementById("{!$Component.funcCont.malformedToken}").value == 'true'){
+                    //alert("2"+document.getElementById("{!$Component.funcCont.malformedToken}").value);
+                    //alert(jQuery('#MTAlert'));
+                    jQuery('#MTAlert').dialog({title:'Malformed Token', modal:true});
+                    //alert(document.getElementById("{!$Component.funcCont.malformedToken}").value);
+                }
+            }
+       function onIfrmRender(){
+           var iFrm = jQuery('IFRAME');
+           jQuery('#frm-hover').css({
+               'height': iFrm.outerHeight() + 'px',
+               'width': (iFrm.outerWidth()-20) +'px'
+           })
+       }
+       window.onload = function(){
+           pageLoad();
+           
+       }    
+    </script>
+    <div id="MTAlert" style="display:none">
+        <apex:form > 
+            <br/>
+            <p style= "display:inline;">Your Oauth token appears to be expired/invalid, would you like to Login again?</p>
+            <div style="text-align: center;margin-top:10px;" id="modal-buttons">
+                <apex:commandButton style="width:80px" value="Ok" action="{!malformedTokenRefresh}"/>
+            </div>
+         </apex:form> 
+     </div>
+    <apex:form id="funcCont">
+    <c:customtabs data="{
+            'menu':[
+            {'name':'{!$Label.Survey_Template}'}
+            ,{'name':'{!$Label.Email_Template}', 'onclick':'goToEmailTemplate()'}
+            ,{'name':'{!$Label.Recipients}', 'onclick':'goToSelectCampaigntype()'}
+            ,{'name':'{!$Label.Survey_Confirmation}', 'onclick':'goToSurveyCampaignConfirmation()'}
+            ]
+        
+        }"></c:customtabs>
+        <apex:actionFunction action="{!surveyController.pageLoad}" name="pageLoad" reRender="container,malformedToken" oncomplete="document.getElementById('initialLoad').style.display = 'block';RenderTable();" status="status2"/>
+        <apex:inputHidden id="malformedToken" value="{!malformedToken}"/>
+    </apex:form>
+    
+    <apex:outputPanel id="container"> 
+    <div id="initialLoad" style="display:none">
+    <apex:form >
+        <apex:actionFunction name="goToEmailTemplate" action="{!goToEmailTemplate}"></apex:actionFunction>
+        <apex:actionFunction name="goToSelectCampaigntype" action="{!goToSelectCampaigntype}"></apex:actionFunction>
+        <apex:actionFunction name="goToSurveyCampaignConfirmation" action="{!goToSurveyCampaignConfirmation}"></apex:actionFunction>
+    
+        <apex:pageBlock mode="edit">
+            <apex:pagemessages ></apex:pagemessages>
+            <apex:pageBlockSection columns="2">
+
+                <apex:pageBlock Title="{!$Label.surveymonkey__Select_a_Survey_Template}">
+                         <table border="0" cellpadding="0" cellspacing="0" class="display cContainerId" style="width:100%;font-size: 13px;">
+                            <thead>
+                                    <tr>
+                                            <th class="no-display"> </th>
+                                            <th> {!$Label.Survey_Name}</th> 
+                                            <th> {!$Label.Last_Modified}</th> 
+                                            <th class="no-display"></th> 
+                                            <th>{!$Label.Type}</th> 
+                                            <th class="no-display"></th> 
+                                    </tr>
+                            </thead> 
+                            <tbody>
+                            
+                            <apex:repeat value="{!surveyController.surveys}" var="survey">
+                                <tr class="{!IF(survey.id == surveyController.survy.id, 'selected','')}">
+                                     <td class="no-display">1</td>
+                                    <td>
+                                        <apex:outputText rendered="{!isCreateMode}">
+                                            <apex:commandLink action="{!surveyController.openPreview}" onclick="select(this)" value="{!survey.title}" status="status2" rerender="surveyPreview">
+                                                <apex:param name="survy" value="{!survey.id}" assignTo="{!surveyController.survyId}"/>
+                                            </apex:commandLink>
+                                        </apex:outputText> 
+                                        <apex:outputText rendered="{!NOT(isCreateMode)}">
+                                            {!survey.title}
+                                        </apex:outputText>    
+                                    </td>
+                                   <td class="no-display">
+                                        <apex:outputText value="{0,date,yyyyMMdd}">
+                                            <apex:param value="{!survey.dTime}" /> 
+                                        </apex:outputText>
+                                    </td>
+                                   <td>    
+                                       <apex:outputText rendered="{!isNull(survey.dTime)}">NA</apex:outputtext>
+                                        <apex:outputText value="{0,date,MM'/'dd'/'yyyy}">
+                                            <apex:param value="{!survey.dTime}" /> 
+                                        </apex:outputText>
+                                    </td>
+                                     <td>
+                                        {!survey.type}
+                                    </td> 
+                                    <td class="no-display"></td>
+                                </tr>
+                            </apex:repeat>
+                            </tbody>
+                            
+                        </table>
+                        <br></br><a class="smLink" href="https://www.surveymonkey.com/home.aspx" target="_BLANK">{!$Label.Manage_Your_Surveys}</a>
+                        <!-- &nbsp;|&nbsp;
+                         <a onclick="callSignOut = true;document.getElementById('signout').src = 'https://www.surveymonkey.com/MyAccount_Logout.aspx'" class="green-link" href="#">{!$Label.Login_as_different_user}.</a>-->
+                         <apex:actionFunction name="gotoSelectSelectSurvey" action="{!gotoSelectSelectSurvey}" />
+                </apex:pageBlock>
+
+                <apex:pageblock title="{!$Label.surveymonkey__Survey_Preview}" id="surveyPreview">
+                    <div id="frm-hover">
+                    </div>
+                    <iframe src="{!surveyController.survy.url}" style="border:0px;" height="320px" width="100%" id="preview" scrolling="true" onload="onIfrmRender()"/>
+                </apex:pageblock>
+
+            </apex:pageBlockSection>
+            
+            <apex:PageBlockButtons >
+                <apex:commandButton value="{!$Label.surveymonkey__Cancel}"  action="{!cancel}"/>
+                <apex:commandButton value="{!$Label.surveymonkey__Continue}"  action="{!goToEmailTemplate}"/>
+                <input type="button" src="s.gif" onclick="pageLoad();" class="btn" title="Refresh" style="height: 22px;background-position: 2px 3px;background: url(/img/alohaSkin/sync.png) top left no-repeat;width: 23px;background-position: 2px 2px;vertical-align: bottom;"/>
+            </apex:PageBlockButtons>
+        </apex:pageBlock>
+        <apex:actionFunction action="{!surveyController.refresh}" name="refreshSurveys" reRender="container,malformedToken" oncomplete="document.getElementById('initialLoad').style.display = 'block';RenderTable();" status="status2"/>
+    </apex:form>     
+    </div>
+    </apex:outputPanel>
+    <apex:actionStatus id="status2" >
+          <apex:facet name="start">
+                <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb;
+                   height: 100%;opacity:0.90;width:100%;"> 
+                   <!-- <div class="waitingHolder" style="top: 74.2px; width: 91px;">-->
+                    <div class="waitingHolder" style="position: fixed;left: 35%; right: 50%;" >
+                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                        <span class="waitingDescription">{!$Label.Loading}...</span>
+                        <img class="waitingImage" src="{!URLFOR($Resource.JSDataTable, 'images/Cancel.png')}" title="Please Wait..." onClick="hideStatus();" style="width: 14px;margin-top: -4px;margin-left: 10px;"/>
+                    </div>
+                </div>
+            </apex:facet>
+    </apex:actionStatus>
+        
+    <div id="Alert" style="display:none">
+        <apex:form > 
+            <br/>
+            <p style= "display:inline;">'This account is not of type Enterprise', try with different account?</p>
+            <div style="text-align: center;margin-top:10px;" id="modal-buttons">
+                <apex:commandButton style="width:80px" value="Ok" rerender="emailSaveError" action="{!emailController.createEmailTemplate}" oncomplete="afterSave()" 
+                rendered="{IF($ObjectType.EmailTemplate.Body.Createable && 
+                $ObjectType.EmailTemplate.subject.Createable &&
+                $ObjectType.EmailTemplate.FolderId.Createable &&
+                $ObjectType.EmailTemplate.DeveloperName.Createable &&
+                $ObjectType.EmailTemplate.Name.Createable &&
+                $ObjectType.EmailTemplate.TemplateType.Createable &&
+                $ObjectType.EmailTemplate.IsActive.Createable)}"/>
+                <apex:commandButton style="width:80px" value="Cancel" rerender="emailSaveError" action="{!emailController.createEmailTemplate}" oncomplete="saveAftrEmail()" />
+                <input class="btn" style="width:80px" type="button" value="No" onclick="doContinue();"/>
+            </div>
+         </apex:form> 
+     </div>    
+    <iframe src="" style="display:none;" width="100%" id="signout" scrolling="true" onload="if(callSignOut)gotoSelectSelectSurvey();"/>   
+</apex:page>

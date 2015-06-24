@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>List</customSettingsType>
+    <customSettingsVisibility>Protected</customSettingsVisibility>
+    <enableFeeds>false</enableFeeds>
+    <fields>
+        <fullName>Automatically_Assign_Seats__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>If this field is checked, full or limited seats will be automatically assigned based on the role hierarchy.</description>
+        <externalId>false</externalId>
+        <label>Automatically Assign Seats</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>CurrentPlaceHolders__c</fullName>
+        <deprecated>false</deprecated>
+        <description>The following placeholders will be rewritten to conform to SurveyMonkey template</description>
+        <externalId>false</externalId>
+        <label>CurrentPlaceHolders</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Inapp_Multiplier__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Inapp Multiplier</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Overage_NotifEmail__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Destination email address to be use when overage occurs of the seat count</description>
+        <externalId>false</externalId>
+        <label>Overage NotifEmail</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PublicTemplateIds__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>PublicTemplateIds</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <label>PlaceHolderList</label>
+</CustomObject>

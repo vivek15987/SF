@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>This is the landing page for survey monkey application</description>
+    <label>SurveyMonkey</label>
+    <mobileReady>false</mobileReady>
+    <motif>Custom301: TV Widescreen</motif>
+    <page>SurveyCampaignList</page>
+</CustomTab>

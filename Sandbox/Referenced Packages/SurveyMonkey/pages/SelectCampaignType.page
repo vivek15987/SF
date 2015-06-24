@@ -1,0 +1,1658 @@
+<apex:page controller="SurveyMonkey.SurveyCampaignController" tabStyle="Survey_Campaign__tab"  docType="html-5.0">
+<!--  Related to Javascript Remoting : Start-->
+<style type="text/css" media="screen">
+            .dataTables_info { padding-top: 0; display : none; }
+            .dataTables_paginate { padding-top: 0; }
+            .css_right { float: right; }
+            #example_wrapper .fg-toolbar { font-size: 0.8em }
+            #theme_links span { float: left; padding: 2px 10px; }
+            #example_wrapper { -webkit-box-shadow: 2px 2px 6px #666; box-shadow: 2px 2px 6px #666; border-radius: 5px; }
+            #example tbody {
+                border-left: 1px solid #AAA;
+                border-right: 1px solid #AAA;
+            }
+            #example thead th:first-child { border-left: 1px solid #AAA; }
+            #example thead th:last-child { border-right: 1px solid #AAA; }
+            
+            #home_Tab a{
+               pointer-events: none;
+               cursor: default;
+            } 
+    </style>
+    <style type="text/css">
+        .header {
+            font-size: 25px;
+            display: block;
+            font-family: Arial;
+            margin-left: 500px;
+        }
+        .custPopup{
+            background-color: white;
+            border-width: 2px;
+            border-style: solid;
+            z-index: 9999;
+            left: 50%;
+            padding:10px;
+            position: absolute;
+            /* These are the 3 css properties you will need to change so the popup 
+            displays in the center of the screen. First set the width. Then set 
+            margin-left to negative half of what the width is. You can add 
+            the height property for a fixed size pop up if you want.*/
+            width: 500px;
+            left: 300px;
+            top:25px;
+        }
+        .popupBackground{
+            background-color:black;
+            opacity: 0.20;
+            filter: alpha(opacity = 20);
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+            height : 800%;
+        }
+          
+        /* Obsolete
+        #dvLoading {
+            background: url('https://loadinggif.com/images/image-selection/36.gif') no-repeat scroll center center #000;
+            width: 100%;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            height: 100%;
+            opacity: 0.5;
+            z-index: 9999;
+        }*/
+    </style> 
+<!--  Related to Javascript Remoting : End-->
+ 
+<head>
+
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-1.10.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'complete.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery.dataTables.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'demo_table_jui.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-ui-1.7.2.custom.css')}"/>
+    <apex:stylesheet value="{!$Resource.SurveyMonkey__SM_Stylesheet}"/>
+    <apex:stylesheet value="{!$Resource.SurveyMonkey__sm_app}"/>
+    <!-- <apex:stylesheet value="{!URLFOR($Resource.SalesforceGridCSS)}"/> -->
+    
+<!--**********************************Include the Data Table Script***************************** -->
+<script src="/soap/ajax/19.0/connection.js" type="text/javascript" /> 
+<!--******************************Header which contain style sheet and script************************** -->  
+
+    <style>
+        .radioButtons{
+            //margin-top: -8px !important;
+        }
+        .leftIndented{
+            //margin-left: 50px !important;
+        }
+        .MainHeading{
+            font-size: 26px;
+        }
+        .LeftColumn{
+            width:140px;
+        }
+        .tableData{
+            border: 1px solid lightgray;
+        }
+        .thData{
+            background-color: lightgray;
+        }
+        .tdData{
+            background-color: #E8E8E8;
+        }
+        /*Tab Style*/
+        #cssmenu {
+            border: none;
+            border: 0px;
+            margin: 0px;
+            padding: 0px;
+            font-family: verdana, geneva, arial, helvetica, sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            color: #8e8e8e;
+            width: auto;
+            padding-bottom: 15px
+        }
+        #cssmenu > ul {
+            margin-top: 6px !important;
+        }
+        #cssmenu ul {
+            background: #CDCDCD;
+            background: -webkit-linear-gradient(#cdcdcd 0%, #e2e2e2 80%, #cdcdcd 100%);
+            background: linear-gradient(#cdcdcd 0%, #e2e2e2 80%, #cdcdcd 100%);
+            border-top: 1px solid #A8A8A8;
+            -webkit-box-shadow: inset 0 1px 0 #e9e9e9, 0 1px 0 #1797c0, 0 2px 0 #706e90, 0 8px 0 #1797c0, 0 9px 0 #383572, 0 -1px 1px rgba(0, 0, 0, 0.1);
+            -moz-box-shadow: inset 0 1px 0 #e9e9e9, 0 1px 0 #1797c0, 0 2px 0 #706e90, 0 8px 0 #1797c0, 0 9px 0 #383572, 0 -1px 1px rgba(0, 0, 0, 0.1);
+            box-shadow: inset 0 1px 0 #e9e9e9, 0 1px 0 #1797c0, 0 2px 0 #706e90, 0 8px 0 #1797c0, 0 9px 0 #383572, 0 -1px 1px rgba(0, 0, 0, 0.1);
+            height: 27px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        #cssmenu ul ul {
+            border-top: 6px solid #1797c0;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+        }
+        #cssmenu ul ul a {
+            line-height: 43px;
+        }
+        #cssmenu ul ul ul {
+            left: 100%;
+            top: 0;
+        }
+        #cssmenu li {
+            float: left;
+            padding: 0px 8px 0px 8px;
+        }
+        #cssmenu li a {
+            color: #666666;
+            display: block;
+            font-weight: bold;
+            line-height: 30px;
+            padding: 0px 25px;
+            text-align: center;
+            text-decoration: none;
+        }
+        #cssmenu li a:hover {
+            color: #000000;
+            text-decoration: none;
+        }
+        #cssmenu li ul {
+            background: #e0e0e0;
+            border-left: 2px solid #1797c0;
+            border-right: 2px solid #1797c0;
+            border-bottom: 2px solid #1797c0;
+            display: none;
+            height: auto;
+            filter: alpha(opacity=95);
+            opacity: 0.95;
+            position: absolute;
+            width: 225px;
+            z-index: 200;
+            /*top:1em;
+                /*left:0;*/
+        }
+        #cssmenu li:hover > ul {
+            display: block;
+        }
+        #cssmenu li li {
+            display: block;
+            float: none;
+            padding: 0px;
+            position: relative;
+            width: 225px;
+        }
+        #cssmenu li ul a {
+            display: block;
+            font-size: 12px;
+            font-style: normal;
+            padding: 0px 10px 0px 15px;
+            text-align: left;
+        }
+        #cssmenu li ul a:hover {
+            background: #949494;
+            color: #000000;
+            opacity: 1.0;
+            filter: alpha(opacity=100);
+        }
+        #cssmenu p {
+            clear: left;
+        }
+        #cssmenu .active > a {
+            background: #1797c0;
+            -webkit-box-shadow: 0 -4px 0 #1797c0, 0 -5px 0 #706e90, 0 -6px 0 #1797c0;
+            -moz-box-shadow: 0 -4px 0 #1797c0, 0 -5px 0 #706e90, 0 -6px 0 #1797c0;
+            box-shadow: 0 -4px 0 #1797c0, 0 -5px 0 #706e90, 0 -6px 0 #1797c0;
+            color: #ffffff;
+        }
+        #cssmenu .active > a:hover {
+            color: white;
+        }
+        .SelectedButton{
+            background: #e8e8e9 url('/img/alohaSkin/btn_sprite.png') repeat-x right bottom !important;
+        }
+        #hover{
+            position: fixed;
+            background-color: yellow;
+            z-index: 100;
+            border: 2px solid crimson;
+        }
+        #hover table {
+            border-collapse: collapse
+        }
+        #hover td {
+            border: 1px solid crimson;
+        }
+          a.helpAnchor {
+            position:relative;
+            text-decoration:none;
+          }
+          a.helpAnchor .helpIcon {
+            position:absolute;
+            text-align:center;
+            font-size:24px;
+            font-weight:bold;
+            width:30px;
+            height:30px;
+            color:#ff0;
+            background-color:#88f;
+          }
+          a.helpAnchor .helpText { 
+            display:none; 
+          }
+          a.helpAnchor:hover .helpText {
+            display:block;
+            position:absolute;
+            width:150px;
+            top:10px;
+            left:20px;
+            background-color:#eff;
+            color:black;
+            border:1px solid black;
+          }
+    </style>
+    
+    <script>
+        /*window.onbeforeunload = function (e) {
+            
+            if (!e) var e = window.event;
+            
+            e = e || window.event;
+            msg = 'This Survey will be deleted.';
+            confirm = false;
+            // For IE and Firefox prior to version 4
+            if (e) {
+                e.returnValue = msg;
+            }else{
+                // For Safari
+                return msg;
+            }
+        };
+        */
+        
+        window.onunload = function (e) {
+            deleteCollector();
+            for(i=0;i<100000;i++){
+                x=x+i+x+i+x+i;
+            }
+        }
+    </script>
+     
+</head>
+    <script>
+
+
+    
+    var globalArr = new Array();
+    
+    function selectDeselectAllInternal(obj){
+        var selectedIds =$(".selectedRecIds")[0].value;
+        
+        selectedIds='';
+        globalArr = new Array();
+        
+        if(obj.checked){
+            for(i=0;i<jQuery('#DataTable').dataTable().fnGetNodes().length;i++){
+                tempObj = jQuery('#DataTable').dataTable().fnGetNodes()[i].children[0].children[0];
+                tempObj.checked=obj.checked;
+                selectedIds+=tempObj.id+',';
+                globalArr.push(tempObj.id);
+            }
+        }else{
+            for(i=0;i<jQuery('#DataTable').dataTable().fnGetNodes().length;i++){
+                jQuery('#DataTable').dataTable().fnGetNodes()[i].children[0].children[0].checked=obj.checked;
+            }
+        }
+        
+        $(".selectedRecIds")[0].value = selectedIds;
+        
+    }
+    
+    function checkUncheck(recId, obj){
+        var selectedIds =$(".selectedRecIds")[0].value;
+        if(obj.checked){
+            selectedIds+=recId+',';
+            //Array
+            globalArr.push(recId);
+        }else{
+            if(selectedIds.indexOf(recId+",")!=-1){
+                selectedIds = selectedIds.replace(recId+",","");
+            }else{
+                selectedIds = selectedIds.replace(recId,"");
+            }
+            //Array
+            for(indx=0;indx<globalArr.length;indx++){
+                if(globalArr[indx]==recId){
+                    globalArr.splice(indx,1);
+                }
+            }
+        }
+        $(".selectedRecIds")[0].value = selectedIds;
+    }
+      
+    function initGlobalArr(){
+        var selectedIds =$(".selectedRecIds")[0].value;
+        var tempString = selectedIds.substring(0,selectedIds.length);
+        globalArr = tempString.split(',');
+    }
+    
+    
+    var hook=false;
+    function unhook() {
+       hook=false;
+    }
+    function setHook(){
+       hook = true;
+    }
+    function goStepFour(){        
+       callGoToStepFourOnly(hook);
+    }
+
+
+        //For Report 
+        function checkReportsLoaded(selectedCriteriaType, isProccessPending){
+            if(selectedCriteriaType=='Existing Report' && isProccessPending=='true'){ 
+                //populateAllReports();
+            }
+        }
+        
+        
+        function limitfieldvalue(field){
+          if(document.getElementById(field).value.length > 3)
+            document.getElementById(field).value = document.getElementById(field).value.substring(0, 3);
+        }
+        
+       function showHover(e,tbl){
+           var div = document.getElementById('hover');
+           div.style.display = 'block';
+           div.innerHTML = tbl;
+           var left  = e.clientX  + "px";
+           var top  = (e.clientY+10)  + "px";
+        
+           div.style.left = left;
+           div.style.top = top;
+        
+       }
+    
+       
+       function hideHover(){
+           document.getElementById('hover').style.display = 'none';
+       }
+       
+       
+    //Related to Javascript Remoting Touch Rule & table rendering: Start
+        sforce.connection.sessionId = '{!$Api.Session_ID}';
+        Visualforce.remoting.timeout = 120000;
+        
+        var allRows = [];
+        
+        //If record already created: then select records
+        
+        /*Initial Load Code: will be applicable for Create Mode when we moved here by hitting back button of confirmation page*/
+        $(document).ready(function(){
+                if('{!JSENCODE(campaignType)}'!='Triggered' && ('{!IsCreateMode}'=='true' || ('{!IsCreateMode}'=='false') && '{!insertedRecipientsIds}'!='')){
+                    if('{!JSENCODE(campaignType)}'!=null && '{!JSENCODE(campaignType)}'!='' && '{!JSENCODE(surveyRecipient)}'!=''){
+                        if( '{!JSENCODE(selectedCriteriaType)}'=='Custom'){
+                            getDataForCustomFilter('{!jsEncode(CustomFilterSoqlString)}','{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}',true,'{!JSENCODE(campaignType)}');
+                        }else if('{!JSENCODE(selectedCriteriaType)}'=='Existing List View'){
+                            getDataForListView('{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}','{!JSENCODE(FilterId)}', true,'{!JSENCODE(campaignType)}');
+                        }else if('{!JSENCODE(selectedCriteriaType)}'=='Existing Report'){                            
+                            //getDataForReport('{!JSENCODE(columnNamesForPage)}','', '{!JSENCODE(surveyRecipient)}', '{!jsencode(selectedReportId)}', false, '{!JSENCODE(campaignType)}','{!emailIndex}');                                                              
+                            getDataForCustomFilterReport('{!JSENCODE(ReportRecordSoqlString)}','{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}',false, '{!JSENCODE(campaignType)}');
+                        }
+                    }
+                }
+            }
+        );
+            
+        /*Function to populate data for the Selected Existing List View: can be called from: 1. On Load, 2. By selecting any List View*/
+        function getDataForListView(fieldNamesString, fieldLabelsString, surveyRecipient, filterId, isInitialLoad, campaignType){
+        console.log('filterId--------' +filterId);
+            if(filterId != ''){
+                $('.JSLoading').fadeIn();
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.SurveyCampaignController.getListViewData}',
+                     surveyRecipient, filterId,
+                    function(result, event){
+                        if (event.status) {
+                            allRows = result;
+                            if(allRows.length>0)
+                            {
+                              $('#customErrorDiv').hide();
+                            }else{
+                              $('#customErrorDiv').show();
+                              $('#customResponseErrors').html('<div color=red> No records found for the selecetd ListView.</Div>');
+                              $('.JSLoading').fadeOut();
+                            }
+                            processTouchRules(fieldNamesString,fieldLabelsString,surveyRecipient,isInitialLoad,campaignType,'Existing ListView','-1');
+                        }else if (event.type === 'exception') {
+                                  $('#customErrorDiv').show();
+                                  $('#customResponseErrors').html(event.message + "<br/>\n<pre>" + event.where + "</pre>");
+                                  $('.JSLoading').fadeOut();
+                              } else {
+                                  $('#customErrorDiv').show();
+                                  $('#customResponseErrors').html(event.message);
+                                  $('.JSLoading').fadeOut();
+                              }
+                    }
+                );
+            }else{
+            console.log('filterId----I am in----');
+                allRows = null;
+                processTouchRules(fieldNamesString,fieldLabelsString,surveyRecipient,isInitialLoad,campaignType,'Existing ListView','-1');
+            }
+        }
+        
+        /*Function to populate data for the Selected Report: can be called from */
+        function getDataForReport(fieldNamesString, fieldLabelsString, surveyRecipient, filterId, isInitialLoad, campaignType, emailIndex){
+            $('.JSLoading').fadeIn();
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.SurveyCampaignController.getReportRemotely}',
+                 surveyRecipient, filterId,
+                function(result, event){
+                    if (event.status) {
+                        allRows = result;
+                        processTouchRules(fieldNamesString,fieldLabelsString,surveyRecipient,isInitialLoad,campaignType,'Existing Report', emailIndex);
+                    }else if (event.type === 'exception') {
+                              $('#customErrorDiv').show();
+                              $('#customResponseErrors').html(event.message + "<br/>\n<pre>" + event.where + "</pre>");
+                              $('.JSLoading').fadeOut();
+                          } else {
+                              $('#customErrorDiv').show();
+                              $('#customResponseErrors').html(event.message);
+                              $('.JSLoading').fadeOut();
+                          }
+                }
+            );
+        }
+            
+        /*Function to populate data for the Selected Custom Filters: can be called from: 1. On Load, 2. By Hitting search button under the Custom filters*/
+        function getDataForCustomFilter(soqlQuery, fieldNamesString, fieldLabelsString, surveyRecipient, isInitialLoad, campaignType){
+            $('.JSLoading').fadeIn();
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.SurveyCampaignController.getAllRecords}',
+                 soqlQuery,
+                function(result, event){
+                    if (event.status) {
+                        try{
+                            allRows = result;
+                            if(allRows.length>0)
+                            {
+                              $('#customErrorDiv').hide();
+                            }else{
+                              $('#customErrorDiv').show();
+                              $('#customResponseErrors').html('<div color=red> No records found for the selecetd criteria.Please refine your search.</Div>');
+                              $('.JSLoading').fadeOut();
+                            }
+                            processTouchRules(fieldNamesString,fieldLabelsString,surveyRecipient,isInitialLoad,campaignType,'Custom','-1');
+                            
+                        }catch(e){
+                            alert(e);
+                        }                   
+                    }else if (event.type === 'exception') {
+                        if(event.message!='unexpected token: <EOF>'){
+                            $('#customErrorDiv').show();
+                            $('#customResponseErrors').html(event.message + "<br/>\n<pre>" + event.where + "</pre>");
+                           }
+                           $('.JSLoading').fadeOut();
+                       } else {
+                           $('#customErrorDiv').show();
+                           $('#customResponseErrors').html(event.message);
+                           $('.JSLoading').fadeOut();
+                       }
+                }
+            );
+        }
+       
+        /*Function to populate data for the Selected Custom Filters: can be called from: 1. On Load, 2. By Hitting search button under the Custom filters*/
+        function getDataForCustomFilterReport(soqlQuery, fieldNamesString, fieldLabelsString, surveyRecipient, isInitialLoad, campaignType){
+            $('.JSLoading').fadeIn();
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.SurveyCampaignController.getAllRecordsReports}',
+                 soqlQuery,
+                function(result, event){
+                    if (event.status) {
+                        try{
+                            allRows = result;
+                            //alert(allRows);
+                            if(allRows.length>0)
+                            {
+                              $('#customErrorDiv').hide();
+                            }else{
+                              $('#customErrorDiv').show();
+                              $('#customResponseErrors').html('<div color=red> No valid record found for the selected report. Please try other report.</Div>');
+                              $('.JSLoading').fadeOut();
+                            }
+                            processTouchRules(fieldNamesString,fieldLabelsString,surveyRecipient,isInitialLoad,campaignType,'Existing Report', -1);
+                        }catch(e){
+                            alert(e);
+                        }                    
+                    }else if (event.type === 'exception') {
+                        if(event.message!='unexpected token: <EOF>'){
+                            $('#customErrorDiv').show();
+                            $('#customResponseErrors').html(event.message + "<br/>\n<pre>" + event.where + "</pre>");
+                           }
+                           $('.JSLoading').fadeOut();
+                       } else {
+                           $('#customErrorDiv').show();
+                           $('#customResponseErrors').html(event.message);
+                           $('.JSLoading').fadeOut();
+                       }
+                }
+            );
+        }
+            
+        /*function will prevent from null values*/
+        function nullCheck(value){
+            return value==null?'':value;
+        }
+            
+        /*Function will apply HTMl and create Data Table based on inputs*/
+        function RenderTable(fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, recipientsWithTouchRule, campaignType, filterType, emailIndex){
+            
+            if(allRows!=null && allRows.length>0){
+                
+                //If Report; render it seperately
+                
+                if(filterType=='Existing Report'){
+                    RenderTableRpt(fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, recipientsWithTouchRule, campaignType, filterType, emailIndex);
+                    return;
+                }
+            
+                fieldNamesString = fieldNamesString.substring(1,fieldNamesString.length-1);
+                var fieldNames = fieldNamesString.split(', ');
+                
+                fieldLabelsString = fieldLabelsString.substring(1,fieldLabelsString.length-1);
+                var fieldLabels = fieldLabelsString.split(', ');
+                
+                // This part of code is to create the heading section on the searched records
+                var rowHead = '<tr><th> '+ (campaignType=='Manual' ? '<input type="Checkbox" onChange="selectDeselectAllInternal(this); return false;" value="{!selectAll}" styleClass="selectAllHH" checked="true" />':'') +' </th>';
+                for(i=0;i<fieldLabels.length;i++){
+                    rowHead =rowHead+'<th>'+fieldLabels[i]+'</th>';
+                }
+                 
+                //Table Data
+                var htmlTdata='';
+                
+                //To set the Selected Ids
+                var existingSelectedIds = $(".selectedRecIds")[0].value;
+                var selectedIds = '';
+                
+                for (var j = 0; j < allRows.length; j++) {
+                
+                
+                    var ids= allRows[j]['Id'] + 
+                            (surveyRecipient=='Case' ? 
+                                '--'+allRows[j]['ContactId'] : 
+                                ( surveyRecipient=='Campaign' ? 
+                                    (allRows[j]['ContactId']!=null ?
+                                        '-Contact-'+allRows[j]['ContactId']+'-'+allRows[j]['CampaignId']: 
+                                        '-Lead-'+allRows[j]['LeadId']
+                                    )+'-'+allRows[j]['CampaignId']  :
+                                    '---'
+                                )
+                            ) ;
+                    console.log('ids------- ' + ids);
+                    var rowData='<td>';
+                    console.log('recipientsWithTouchRule------- ' + recipientsWithTouchRule);
+                    
+                    
+                    
+                    
+                    //Add Tourch rules on Hover
+                    if(recipientsWithTouchRule!=null){
+                        var rule=null;
+                        if( (surveyRecipient=='Case' || (surveyRecipient=='Campaign' && allRows[j]['Contact']!=null  && allRows[j]['Contact']['Email']!=null)) && allRows[j]['Contact']!=null && allRows[j]['Contact']['Email']!=null){
+                            rule=recipientsWithTouchRule[allRows[j]['Contact']['Email']];
+                        }else if(surveyRecipient=='Campaign' && allRows[j]['Lead'] && allRows[j]['Lead']['Email']){
+                            rule=recipientsWithTouchRule[allRows[j]['Lead']['Email']];
+                        }else if(allRows[j]['Email']!=null ){
+                            rule = recipientsWithTouchRule[allRows[j]['Email']];
+                        }
+                        
+                        
+                        if(rule!=null){
+                            htmlData = '';//'<table><tr><td><b>Object</b></td><td><b>Max Survey</b></td><td><b>Time Period</b></td></tr>';
+                            
+                            for(ruleIndex=0;ruleIndex<rule.length;ruleIndex++){
+                                //htmlData = htmlData+'  <tr><td>'+rule[ruleIndex].objectType+'</td>  <td>'+rule[ruleIndex].maxCount+'</td> <td>'+rule[ruleIndex].onEvery +'</td></tr>';
+                                htmlData = htmlData + (htmlData!='' ? '<br/>':'') + rule[ruleIndex].maxCount + ' per ' + rule[ruleIndex].onEvery + ' on ' +rule[ruleIndex].objectType;
+                            }
+                            
+                            rowData=rowData+'<input type="Checkbox" id="'+ids+'" styleClass="inputCheckboxesHH '+ ids +'" onChange="checkUncheck(\''+ids+'\',this);" '+
+                            (campaignType=='Recurring' ? ' disabled="true"':"") +
+                            ' title="'+ htmlData +'" />';
+                            
+                            //rowData = rowData+'<span onmouseover="showHover(event,\''+ htmlData+ '</table>\')" onmouseout="hideHover()" style="color:red;">TouchRule</span>';
+                            
+                        }else{
+                            
+                            rowData=rowData+'<input type="Checkbox" id="'+ids+'" styleClass="inputCheckboxesHH '+ ids +'" onChange="checkUncheck(\''+ids+'\',this);" '+ 
+                            (( isInitialLoad && (existingSelectedIds=='' || existingSelectedIds.indexOf(ids) >=0 ) ) || !isInitialLoad ?' checked="true" ':'') +
+                            (campaignType=='Recurring' ? ' disabled="true"':"") +' />';
+                            
+                            if(campaignType=='Recurring' || campaignType=='Manual'){
+                                selectedIds=selectedIds+ids+',';
+                            }                           
+                        }
+                        
+                    }else if(campaignType=='Manual' || campaignType=='Recurring'){
+                        rowData=rowData+'<input type="Checkbox" id="'+ids+'" styleClass="inputCheckboxesHH '+ ids +'" onChange="checkUncheck(\''+ids+'\',this);" '+ 
+                            (( isInitialLoad && (existingSelectedIds=='' || existingSelectedIds.indexOf(ids) >=0 ) ) || !isInitialLoad ?' checked="true" ':'') +
+                            (campaignType=='Recurring' ? ' disabled="true"':"") +' />';
+                        selectedIds=selectedIds+ids+',';
+                    }
+                        
+                        
+                    rowData = rowData+' </td>';
+                        
+                        
+                    for(i=0;i<fieldNames.length;i++){
+                        if(fieldNames[i]!='Id'){
+                            if(fieldNames[i].indexOf('.')==-1){
+                                rowData=rowData+'<td>'+(nullCheck(allRows[j][fieldNames[i]]))+ '</td>';
+                            }else{ // For caseObj.Contact.Email
+                                if(allRows[j][fieldNames[i].substring(0,fieldNames[i].indexOf('.'))]!=null){
+                                    rowData=rowData+'<td>'+
+                                        (nullCheck(allRows[j][fieldNames[i].substring(0,fieldNames[i].indexOf('.'))][fieldNames[i].substring(fieldNames[i].indexOf('.')+1,fieldNames[i].length)]))+ 
+                                        '</td>';
+                                }else{
+                                    rowData=rowData+'<td>&nbsp;</td>';
+                                }
+                            }
+                        }
+                    }
+                    if(j%2==0){
+                        htmlTdata=htmlTdata+'<tr class="Even">'+rowData+'</tr>';
+                    }else{
+                        htmlTdata=htmlTdata+'<tr class="Odd">'+rowData+'</tr>';
+                    } 
+               }
+               if(!isInitialLoad || $(".selectedRecIds")[0].value=='' || campaignType=='Recurring'){
+                   $(".selectedRecIds")[0].value =selectedIds.substring(0,selectedIds.length-1);
+               }
+               //alert($(".selectedRecIds")[0].value);
+               
+                var table = '<table  cellpadding="0" cellspacing="0" border="1" id="DataTable" class="display cContainerId"  style="width:100%;font-size: 13px;"><thead> '+rowHead+'</tr></head>'+
+                            '<tbody>'+ htmlTdata +'</tbody></table>';
+                
+                $('#DataTableDiv').html(table);
+                $('#DataTable').dataTable( { 
+                    "bJQueryUI": true,
+                    "sPaginationType": "full_numbers",
+                    "bDestroy": false,
+                    "aaSorting": [[1,'asc']]
+                });
+                
+                if(campaignType!='Recurring'){
+                    $('.selectAllForCustomAndList').show();
+                }
+                $('.totalRecords').html(' '+allRows.length);
+                
+                if(allRows.length > 0){
+                    document.getElementById('filterMatches').style.display='';
+                }else{
+                    document.getElementById('filterMatches').style.display='none';
+                }
+                
+                /*if(allRows.lenth()>100){
+                    //Let Touch Rules render
+                    setTimeOut(function(){ $('.JSLoading').fadeOut(); },2000);
+                }else{
+                    $('.JSLoading').fadeOut();
+                }*/
+                
+                $('.JSLoading').fadeOut();
+            }else{
+                $('.selectAllForCustomAndList').hide();
+                $('#DataTableDiv').html('');
+                $('.totalRecords').html(' '+0);
+                $('.JSLoading').fadeOut();
+                
+                document.getElementById('filterMatches').style.display='none';
+            }
+            
+        }
+        
+        
+        
+        /*Function will apply HTMl and create Data Table based on inputs*/
+        function RenderTableRpt(fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, recipientsWithTouchRule, campaignType, filterType, emailIndex){
+            
+            if(allRows!=null && allRows.length>0){
+                
+                          
+                fieldNamesString = fieldNamesString.substring(1,fieldNamesString.length-1);
+                var fieldNames = fieldNamesString.split(', ');
+                
+                fieldLabelsString = fieldLabelsString.substring(1,fieldLabelsString.length-1);
+                var fieldLabels = fieldLabelsString.split(', ');
+                
+                // This part of code is to create the heading section on the searched records
+                var rowHead = '<tr><th> '+ (campaignType=='Manual' ? '<input disabled=false type="Checkbox" onChange="selectDeselectAllInternal(this); return false;" value="{!selectAll}" styleClass="selectAllHH" checked="true" />':'') +' </th>';
+                for(i=0;i<fieldLabels.length;i++){
+                    rowHead =rowHead+'<th>'+fieldLabels[i]+'</th>';
+                }
+                
+                //Table Data
+                var htmlTdata='';
+                
+                //To set the Selected Ids
+                var existingSelectedIds = $(".selectedRecIds")[0].value;
+                var selectedIds = '';
+                
+                for (var j = 0; j < allRows.length; j++) {
+                
+                
+                    var ids= allRows[j]['Id'] + 
+                            (surveyRecipient=='Case' ? 
+                                '--'+allRows[j]['ContactId'] : 
+                                ( surveyRecipient=='Campaign' ? 
+                                    (allRows[j]['ContactId']!=null ?
+                                        '-Contact-'+allRows[j]['ContactId']+'-'+allRows[j]['CampaignId']: 
+                                        '-Lead-'+allRows[j]['LeadId']
+                                    )+'-'+allRows[j]['CampaignId']  :
+                                    '---'
+                                )
+                            ) ;
+                    console.log('ids------- ' + ids);
+                    var rowData='<td>';
+                    console.log('recipientsWithTouchRule------- ' + recipientsWithTouchRule);
+                    
+                    
+                   
+                    
+                    //Add Tourch rules on Hover
+                    if(recipientsWithTouchRule!=null){
+                        var rule=null;
+                        if( (surveyRecipient=='Case' || (surveyRecipient=='Campaign' && allRows[j]['Contact']!=null  && allRows[j]['Contact']['Email']!=null)) && allRows[j]['Contact']!=null && allRows[j]['Contact']['Email']!=null){
+                            rule=recipientsWithTouchRule[allRows[j]['Contact']['Email']];
+                        }else if(surveyRecipient=='Campaign' && allRows[j]['Lead'] && allRows[j]['Lead']['Email']){
+                            rule=recipientsWithTouchRule[allRows[j]['Lead']['Email']];
+                        }else if(allRows[j]['Email']!=null ){
+                            rule = recipientsWithTouchRule[allRows[j]['Email']];
+                        }
+                        
+                       
+                        if(rule!=null){
+                            htmlData = '';//'<table><tr><td><b>Object</b></td><td><b>Max Survey</b></td><td><b>Time Period</b></td></tr>';
+                            
+                            for(ruleIndex=0;ruleIndex<rule.length;ruleIndex++){
+                                //htmlData = htmlData+'  <tr><td>'+rule[ruleIndex].objectType+'</td>  <td>'+rule[ruleIndex].maxCount+'</td> <td>'+rule[ruleIndex].onEvery +'</td></tr>';
+                                htmlData = htmlData + (htmlData!='' ? '<br/>':'') + rule[ruleIndex].maxCount + ' per ' + rule[ruleIndex].onEvery + ' on ' +rule[ruleIndex].objectType;
+                            }
+                            
+                            rowData=rowData+'<input type="Checkbox" disabled=false id="'+ids+'" styleClass="inputCheckboxesHH '+ ids +'" onChange="checkUncheck(\''+ids+'\',this);" '+
+                            (campaignType=='Recurring' ? ' disabled="true"':"") +
+                            ' title="'+ htmlData +'" />';
+                            
+                            //rowData = rowData+'<span onmouseover="showHover(event,\''+ htmlData+ '</table>\')" onmouseout="hideHover()" style="color:red;">TouchRule</span>';
+                            
+                        }else{
+                            
+                            rowData=rowData+'<input type="Checkbox" disabled=false id="'+ids+'" styleClass="inputCheckboxesHH '+ ids +'" onChange="checkUncheck(\''+ids+'\',this);" '+ 
+                            (( isInitialLoad && (existingSelectedIds=='' || existingSelectedIds.indexOf(ids) >=0 ) ) || !isInitialLoad ?' checked="true" ':'') +
+                            (campaignType=='Recurring' ? ' disabled="true"':"") +' />';
+                            
+                            if(campaignType=='Recurring' || campaignType=='Manual'){
+                                selectedIds=selectedIds+ids+',';
+                            }                           
+                        }
+                        
+                    }else if(campaignType=='Manual' || campaignType=='Recurring'){
+                        rowData=rowData+'<input type="Checkbox" disabled=false id="'+ids+'" styleClass="inputCheckboxesHH '+ ids +'" onChange="checkUncheck(\''+ids+'\',this);" '+ 
+                            (( isInitialLoad && (existingSelectedIds=='' || existingSelectedIds.indexOf(ids) >=0 ) ) || !isInitialLoad ?' checked="true" ':'') +
+                            (campaignType=='Recurring' ? ' disabled="true"':"") +' />';
+                        selectedIds=selectedIds+ids+',';
+                    }
+                        
+                     
+                    rowData = rowData+' </td>';
+                        
+                        
+                    for(i=0;i<fieldNames.length;i++){
+                        if(fieldNames[i]!='Id'){
+                            if(fieldNames[i].indexOf('.')==-1){
+                                rowData=rowData+'<td>'+(nullCheck(allRows[j][fieldNames[i]]))+ '</td>';
+                            }else{ // For caseObj.Contact.Email
+                                if(allRows[j][fieldNames[i].substring(0,fieldNames[i].indexOf('.'))]!=null){
+                                    rowData=rowData+'<td>'+
+                                        (nullCheck(allRows[j][fieldNames[i].substring(0,fieldNames[i].indexOf('.'))][fieldNames[i].substring(fieldNames[i].indexOf('.')+1,fieldNames[i].length)]))+ 
+                                        '</td>';
+                                }else{
+                                    rowData=rowData+'<td>&nbsp;</td>';
+                                }
+                            }
+                        }
+                    }
+                    if(j%2==0){
+                        htmlTdata=htmlTdata+'<tr class="Even">'+rowData+'</tr>';
+                    }else{
+                        htmlTdata=htmlTdata+'<tr class="Odd">'+rowData+'</tr>';
+                    } 
+               }
+              
+               if(!isInitialLoad || $(".selectedRecIds")[0].value=='' || campaignType=='Recurring'){
+                   $(".selectedRecIds")[0].value =selectedIds.substring(0,selectedIds.length-1);
+               }
+               //alert($(".selectedRecIds")[0].value);
+               
+                var table = '<table  cellpadding="0" cellspacing="0" border="1" id="DataTable" class="display cContainerId"  style="width:100%;font-size: 13px;"><thead> '+rowHead+'</tr></head>'+
+                            '<tbody>'+ htmlTdata +'</tbody></table>';
+                
+                $('#DataTableDiv').html(table);
+                $('#DataTable').dataTable( { 
+                    "bJQueryUI": true,
+                    "sPaginationType": "full_numbers",
+                    "bDestroy": false,
+                    "aaSorting": [[1,'asc']]
+                });
+                
+                if(campaignType!='Recurring'){
+                    $('.selectAllForCustomAndList').show();
+                }
+                $('.totalRecords').html(' '+allRows.length);
+                
+                if(allRows.length > 0){
+                    document.getElementById('filterMatches').style.display='';
+                }else{
+                    document.getElementById('filterMatches').style.display='none';
+                }
+                
+                /*if(allRows.lenth()>100){
+                    //Let Touch Rules render
+                    setTimeOut(function(){ $('.JSLoading').fadeOut(); },2000);
+                }else{
+                    $('.JSLoading').fadeOut();
+                }*/
+                
+                $('.JSLoading').fadeOut();
+            }else{
+                $('.selectAllForCustomAndList').hide();
+                $('#DataTableDiv').html('');
+                $('.totalRecords').html(' '+0);
+                $('.JSLoading').fadeOut();
+                
+                document.getElementById('filterMatches').style.display='none';
+            }
+            
+        }
+        
+        
+        
+        
+        
+            function RenderTableForReport(fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, recipientsWithTouchRule, campaignType, filterType, emailIndex){
+            if(allRows!=null && allRows.length>0){
+
+                fieldNamesString = fieldNamesString.substring(1,fieldNamesString.length-1);
+                var fieldNames = fieldNamesString.split(', ');
+                
+                fieldLabelsString = fieldLabelsString.substring(1,fieldLabelsString.length-1);
+                var fieldLabels = fieldLabelsString.split(', ');
+                
+                // This part of code is to create the heading section on the searched records
+                var rowHead = '<tr><th> '+ (campaignType=='Manual' ? '<input type="Checkbox" styleClass="inputCheckboxesHH" disabled="true" checked="true" />':'') +' </th>';
+                for(i=0;i<fieldLabels.length;i++){
+                    rowHead =rowHead+'<th>'+fieldLabels[i]+'</th>';
+                }
+                 
+                //Table Data
+                var htmlTdata='';
+                
+                //To set the Selected Ids
+                var existingSelectedIds = $(".selectedRecIds")[0].value;
+                var selectedIds = '';
+                
+                for (var j = 0; j < allRows.length; j++) {
+                
+                
+                    var ids= allRows[j]['Id'] + 
+                            (surveyRecipient=='Case' ? 
+                                '--'+allRows[j]['ContactId'] : 
+                                ( surveyRecipient=='Campaign' ? 
+                                    (allRows[j]['ContactId']!=null ?
+                                        '-Contact-'+allRows[j]['ContactId']+'-'+allRows[j]['CampaignId']: 
+                                        '-Lead-'+allRows[j]['LeadId']
+                                    )+'-'+allRows[j]['CampaignId']  :
+                                    '---'
+                                )
+                            ) ;
+                    console.log('ids------- ' + ids);
+                    var rowData='<td>';
+                   // console.log('recipientsWithTouchRule------- ' + recipientsWithTouchRule);
+                    
+                    //Add Tourch rules on Hover
+                    if(recipientsWithTouchRule!=null){
+                        var rule=null;
+                        if( (surveyRecipient=='Case' || (surveyRecipient=='Campaign' && allRows[j]['Contact']!=null  && allRows[j]['Contact']['Email']!=null)) && allRows[j]['Contact']!=null && allRows[j]['Contact']['Email']!=null){
+                            rule=recipientsWithTouchRule[allRows[j]['Contact']['Email']];
+                        }else if(surveyRecipient=='Campaign' && allRows[j]['Lead'] && allRows[j]['Lead']['Email']){
+                            rule=recipientsWithTouchRule[allRows[j]['Lead']['Email']];
+                        }else if(allRows[j]['Email']!=null ){
+                            rule = recipientsWithTouchRule[allRows[j]['Email']];
+                        }
+                        
+                        if(rule!=null){
+                            htmlData = '';
+                            
+                            for(ruleIndex=0;ruleIndex<rule.length;ruleIndex++){                                
+                                htmlData = htmlData + (htmlData!='' ? '<br/>':'') + rule[ruleIndex].maxCount + ' per ' + rule[ruleIndex].onEvery + ' on ' +rule[ruleIndex].objectType;
+                            }
+
+                            rowData=rowData+'<input type="Checkbox" styleClass="inputCheckboxesHH" disabled="true" checked="true" />';                            
+                        }else{
+                            
+                            rowData=rowData+'<input type="Checkbox" styleClass="inputCheckboxesHH" disabled="true" checked="true" />';                            
+                                                                               
+                        }
+                        
+                    }else if(campaignType=='Manual' || campaignType=='Recurring'){
+                            rowData=rowData+'<input type="Checkbox" styleClass="inputCheckboxesHH" disabled="true" checked="true" />';                            
+                    }
+                        
+                        
+                    rowData = rowData+' </td>';
+                        
+                        
+                    for(i=0;i<fieldNames.length;i++){
+                        if(fieldNames[i]!='Id'){
+                            if(fieldNames[i].indexOf('.')==-1){
+                                rowData=rowData+'<td>'+(nullCheck(allRows[j][fieldNames[i]]))+ '</td>';
+                            }else{ // For caseObj.Contact.Email
+                                if(allRows[j][fieldNames[i].substring(0,fieldNames[i].indexOf('.'))]!=null){
+                                    rowData=rowData+'<td>'+
+                                        (nullCheck(allRows[j][fieldNames[i].substring(0,fieldNames[i].indexOf('.'))][fieldNames[i].substring(fieldNames[i].indexOf('.')+1,fieldNames[i].length)]))+ 
+                                        '</td>';
+                                }else{
+                                    rowData=rowData+'<td>&nbsp;</td>';
+                                }
+                            }
+                        }
+                    }
+                    if(j%2==0){
+                        htmlTdata=htmlTdata+'<tr class="Even">'+rowData+'</tr>';
+                    }else{
+                        htmlTdata=htmlTdata+'<tr class="Odd">'+rowData+'</tr>';
+                    } 
+               }
+               if(!isInitialLoad || $(".selectedRecIds")[0].value=='' || campaignType=='Recurring'){
+                   $(".selectedRecIds")[0].value =selectedIds.substring(0,selectedIds.length-1);
+               }
+               
+                var table = '<table  cellpadding="0" cellspacing="0" border="1" id="DataTable" class="display cContainerId"  style="width:100%;font-size: 13px;"><thead> '+rowHead+'</tr></head>'+
+                            '<tbody>'+ htmlTdata +'</tbody></table>';
+                
+            $('#DataTableDiv').html(table);
+            $('#DataTable').dataTable( { 
+                "bJQueryUI": true,
+                "sPaginationType": "full_numbers",
+                "bDestroy": false,
+                "aaSorting": [[1,'asc']]
+            });
+            
+            $('.totalRecords').html(' '+allRows.length);
+            
+            $('.JSLoading').fadeOut();
+            }         
+        }
+       
+      
+        /*Defining Prototype for Date Object : Function will add/subtract days from the date Object*/
+        Date.prototype.addDays = function(days) {
+                var dt = new Date(this);
+                dt.setDate(this.getDate() + days);
+                return dt;
+            };
+                
+        /*Retrieve Touch Rules for filtered Recipients*/
+        function processTouchRules(fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, campaignType, filterType, emailIndex){
+            var soqlQuery = "Select ID, {!JSENCODE(prefix)}Max_Survey__c, {!JSENCODE(prefix)}Survey_Every__c, {!JSENCODE(prefix)}Survey_Every_On__c, {!JSENCODE(prefix)}Object__c from {!JSENCODE(prefix)}Touch_Rules__c where {!JSENCODE(prefix)}Active__c=true and {!JSENCODE(prefix)}Object__c in ('"+surveyRecipient+"','Any Email Address') ORDER BY {!JSENCODE(prefix)}Survey_Every_On__c DESC, {!JSENCODE(prefix)}Survey_Every__c DESC";
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.SurveyCampaignController.getAllRecords}',
+                 soqlQuery,
+                function(result, event){
+                    if (event.status) {
+                        console.log(result);
+                        applyTouchRules(fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, campaignType, filterType, emailIndex, result);
+                    }else if (event.type === 'exception') {
+                              $('#customErrorDiv').show();
+                              $('#customResponseErrors').html(event.message + "<br/>\n<pre>" + event.where + "</pre>");
+                              $('.JSLoading').fadeOut();
+                          } else {
+                              $('#customErrorDiv').show();
+                              $('#customResponseErrors').html(event.message);
+                              $('.JSLoading').fadeOut();
+                          }
+                }
+            );
+        }
+
+        /*Function will process Touch Rules for filtered Recipients*/
+        function applyTouchRules(fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, campaignType, filterType, emailIndex, ruleResult){
+            
+            if(allRows!=null && allRows.length>0){
+                //Prepare the Invalid Contacts 
+                
+                if(typeof ruleResult !== 'undefined' && ruleResult instanceof Array && ruleResult.length > 0){
+                    var rows = ruleResult;
+                    
+                    if(rows.length>0){
+                    
+                        //Get Emails
+                        var emails = "";
+                        if(filterType!='Existing Report'){
+                            if(surveyRecipient=='Case'){
+                                for (var j = 0; j < allRows.length; j++) {
+                                    if(allRows[j]['Contact']!=null && allRows[j]['Contact']['Email']!=null && emails.indexOf(allRows[j]['Contact']['Email'])==-1){
+                                        emails = emails+'\''+allRows[j]['Contact']['Email']+'\',';
+                                    }
+                                } 
+                            }else if(surveyRecipient=='Campaign'){
+                                for (var j = 0; j < allRows.length; j++) {
+                                    if(allRows[j]['Contact']!=null && allRows[j]['Contact']['Email']!=null && emails.indexOf(allRows[j]['Contact']['Email'])==-1){
+                                        emails = emails+'\''+allRows[j]['Contact']['Email']+'\',';
+                                    }else if(allRows[j]['Lead']!=null && allRows[j]['Lead']['Email']!=null && emails.indexOf(allRows[j]['Lead']['Email'])==-1){
+                                        emails = emails+'\''+allRows[j]['Lead']['Email']+'\',';
+                                    }
+                                } 
+                            }else{
+                                for (var j = 0; j < allRows.length; j++) {
+                                    if(allRows[j]['Email']!=null && emails.indexOf(allRows[j]['Email'])==-1){
+                                        emails = emails+'\''+allRows[j]['Email']+'\',';
+                                        console.log('emails@@@@@@ ' +emails);
+                                    }
+                                } 
+                            }
+                        }else if(emailIndex!=-1){
+                            for (var j = 0; j < allRows.length; j++) {
+                                if(allRows[j].dataCells[emailIndex].Label!=''){
+                                    emails = emails+'\''+allRows[j].dataCells[emailIndex].Label+'\',';
+                                }
+                            } 
+                        }
+                        
+                        if(emails!=""){
+                            emails = emails.substring(0, emails.length-1);
+                        }
+                        
+                        
+                        var ruleMap = [];
+                        var today = new Date();
+                        var maxDate;
+                        
+                        for (var i = 0; i < rows.length; i++) {
+                            
+                            var rule = rows[i];
+                            var temp = {};
+                            if(rows[i].{!JSENCODE(prefix)}Max_Survey__c!=null){
+                                temp.maxCount = parseInt(rows[i].{!JSENCODE(prefix)}Max_Survey__c);
+                            }else{
+                                temp.maxCount = 0;
+                            }
+                            temp.objectType = rows[i].{!JSENCODE(prefix)}Object__c;
+                            
+                            if(rows[i].{!JSENCODE(prefix)}Survey_Every__c!=null){
+                                temp.onEvery = (parseInt(rows[i].{!JSENCODE(prefix)}Survey_Every__c)>1 ? parseInt(rows[i].{!JSENCODE(prefix)}Survey_Every__c)+' ' : ' ') +rows[i].{!JSENCODE(prefix)}Survey_Every_On__c.replace('(s)',(parseInt(rows[i].{!JSENCODE(prefix)}Survey_Every__c)>1 ? 's' : ''));
+                            }else{
+                                temp.onEvery = '0 &nbsp;'+rows[i].{!JSENCODE(prefix)}Survey_Every_On__c;
+                            }
+                            
+                            if(rule.{!JSENCODE(prefix)}Survey_Every__c!=null){
+                                if (rule.{!JSENCODE(prefix)}Survey_Every_On__c == 'day(s)') temp.maxDate = today.addDays( - rule.{!JSENCODE(prefix)}Survey_Every__c);
+                                else if (rule.{!JSENCODE(prefix)}Survey_Every_On__c == 'week(s)') temp.maxDate = today.addDays( - (rule.{!JSENCODE(prefix)}Survey_Every__c * 7));
+                                else if (rule.{!JSENCODE(prefix)}Survey_Every_On__c == 'month(s)') temp.maxDate = today.addDays( - (rule.{!JSENCODE(prefix)}Survey_Every__c * 30));
+                                else if (rule.{!JSENCODE(prefix)}Survey_Every_On__c == 'quarter(s)') temp.maxDate = today.addDays( - (rule.{!JSENCODE(prefix)}Survey_Every__c * 90));
+                                else if (rule.{!JSENCODE(prefix)}Survey_Every_On__c == 'year(s)') temp.maxDate = today.addDays( - (rule.{!JSENCODE(prefix)}Survey_Every__c * 365));
+                            }else{
+                                temp.maxDate = today(); 
+                            }
+                            
+                            if(maxDate==null || maxDate > temp.maxDate){
+                                maxDate = temp.maxDate;
+                            }
+                            ruleMap[i] = temp;
+                        }
+                        
+                        //Process Recipients :
+                        var dateString = get2DigitNumber(maxDate.getFullYear())+'-'+get2DigitNumber(maxDate.getMonth()+1)+'-'+get2DigitNumber(maxDate.getDate());
+                        //getRecipients
+                        Visualforce.remoting.Manager.invokeAction(
+                            '{!$RemoteAction.SurveyCampaignController.getRecipientsList}',
+                             emails, dateString,
+                            function(result, event){
+                                if (event.status) {
+                                    processExistingRecipients(result, ruleMap, emails, fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, campaignType, filterType, emailIndex);
+                                }else if (event.type === 'exception') {
+                                    if(event.message!='unexpected token: <EOF>'){
+                                        $('#customErrorDiv').show();
+                                        $('#customResponseErrors').html(event.message + "<br/>\n<pre>" + event.where + "</pre>");
+                                    }
+                                    $('.JSLoading').fadeOut();
+                                } else {
+                                    $('#customErrorDiv').show();
+                                    $('#customResponseErrors').html(event.message);
+                                    $('.JSLoading').fadeOut();
+                                }
+                                
+                            }
+                        );
+                    }
+                }else{
+                    //If no Rules matches then render table
+                    RenderTable(fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, null, campaignType, filterType, emailIndex);
+                    return;
+                }
+            }else{
+                RenderTable(fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, null, campaignType, filterType, emailIndex);
+            }
+        }
+        
+        /*Function will populate recipientsWithTouchRule map: that will have an Email id as a key and applicable rules as a value*/
+        function processExistingRecipients(recipients, ruleMap, emails, fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, campaignType, filterType, emailIndex){
+            
+            var mapEmailRecipient = [];
+            var emailIds = [];
+            emailCounts =0;
+            
+            if(recipients!=null){
+                for(i=0 ; i<recipients.length ; i++){
+                    //alert('@@@@@@recipientObj '+recipients[i].{!JSENCODE(prefix)}Send_Date__c);
+                    recipientObj = recipients[i];
+                    email = recipientObj.{!JSENCODE(prefix)}Recipient_Email__c;
+                    if(mapEmailRecipient[recipientObj.{!JSENCODE(prefix)}Recipient_Email__c]==null){
+                        mapEmailRecipient[recipientObj.{!JSENCODE(prefix)}Recipient_Email__c]=[];
+                        mapEmailRecipient[recipientObj.{!JSENCODE(prefix)}Recipient_Email__c][0] = recipientObj;
+                        emailIds[emailCounts++]=recipientObj.{!JSENCODE(prefix)}Recipient_Email__c;
+                    }else{
+                        mapEmailRecipient[recipientObj.{!JSENCODE(prefix)}Recipient_Email__c][mapEmailRecipient[recipientObj.{!JSENCODE(prefix)}Recipient_Email__c].length] = recipientObj;
+                    }
+                    
+                }
+                //Process Recipients for Touch Rules
+                recipientsWithTouchRule = [];
+                
+                
+                //alert('@@@@@@ Rule Map : '+ruleMap.length);
+                
+                for(i=0;i<emailIds.length;i++){ 
+                    recipientList = mapEmailRecipient[emailIds[i]];
+                    for(ruleIndex=0 ; ruleIndex<ruleMap.length ; ruleIndex++){
+                        matchedRecipientCount=0;
+                        for(j=0;j<recipientList.length;j++){
+                            //alert('ruleMap Inner: '+recipientList[j]);
+                            //alert( ruleMap[ruleIndex].maxDate +' --------------------::---------------------- '+ recipientList[j]);
+                            ruleMaxDate =ruleMap[ruleIndex].maxDate;
+                            recipientSendDate =new Date(recipientList[j].{!JSENCODE(prefix)}Send_Date__c);
+                            
+                            if(ruleMaxDate.getFullYear() < recipientSendDate.getFullYear() || ruleMaxDate.getMonth() < recipientSendDate.getMonth()  || ruleMaxDate.getDate()< recipientSendDate.getDate() || 
+                                    (ruleMaxDate.getYear() == recipientSendDate.getYear() && ruleMaxDate.getMonth() == recipientSendDate.getMonth() && ruleMaxDate.getDate() == recipientSendDate.getDate()) 
+                                ){
+                                
+                                matchedRecipientCount++;
+                                if (matchedRecipientCount >= ruleMap[ruleIndex].maxCount) {
+                                    
+                                    if(recipientsWithTouchRule[recipientList[j].{!JSENCODE(prefix)}Recipient_Email__c]==null){
+                                        recipientsWithTouchRule[recipientList[j].{!JSENCODE(prefix)}Recipient_Email__c]= new Array();
+                                        recipientsWithTouchRule[recipientList[j].{!JSENCODE(prefix)}Recipient_Email__c][0]=ruleMap[ruleIndex];
+                                    }
+                                    /*Commented as for now we want to show only 1st rule
+                                    else{
+                                        
+                                        recipientsWithTouchRule[recipientList[j].{!JSENCODE(prefix)}Recipient_Email__c][recipientsWithTouchRule[recipientList[j].{!JSENCODE(prefix)}Recipient_Email__c].length]= ruleMap[ruleIndex];
+                                    }*/
+                                    
+                                    //alert('Yes Matched========> '+recipientList[j].{!JSENCODE(prefix)}Recipient_Email__c+' : '+ruleMap[ruleIndex].objectType);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                var arr = emails.split(',');
+                //alert('Before Render Table');
+            }
+            RenderTable(fieldNamesString, fieldLabelsString, surveyRecipient,isInitialLoad, recipientsWithTouchRule, campaignType, filterType, emailIndex);
+            return;
+        }
+        
+        /*Used to make a Date String, function will get a number and will return it in 2 digit form (like for 1 it will return 01)*/
+        function get2DigitNumber(value){
+            if(value>9) return value;
+            else return '0'+value;
+        }
+        
+        
+        function numericFilter(event, value){
+            if(value.length <= 2 && (event.keyCode>=48 && event.keyCode<=57) || event.keyCode==35 || event.keyCode==36 || event.keyCode==8 || event.keyCode==46 || event.keyCode==37 || event.keyCode==39 || event.keyCode==16 || event.keyCode==17){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        
+        //Related to Javascript Remoting : End
+    </script>
+    <div id="hover" style="display:none"></div>
+     <apex:form id="frm">
+     
+    <!-- <div id='cssmenu'>
+             <ul>
+                 <li class=''><apex:commandLink action="{!RedirectOnSurveyTemplate}" value="{!$Label.Survey_Template}" id="theCommandLink3"/>
+                </li>
+                <li class=''><apex:commandLink action="{!RedirectOnEmailTemplate}" value="{!$Label.Email_Template}" id="theCommandLink2"/>
+                </li> 
+                <li class='active'> 
+                <apex:commandLink action="{!RedirectOnSendMethod}" value="{!$Label.Recipients}" id="theCommandLink1"/>
+                </li>
+                <li class=''><apex:commandLink action="{!RedirectOnconfirmation}" value="{!$Label.Survey_Confirmation}" id="theCommandLink"/>
+                </li>
+                <li style="width: 100%;"></li>
+            </ul>
+        </div> -->
+        
+      <c:customtabs data="{
+            'menu':[
+            {'name':'{!$Label.Survey_Template}',  'onclick':'goToSurveyTemplate()'}
+            ,{'name':'{!$Label.Email_Template}', 'onclick':'goToEmailTemplate()'}
+            ,{'name':'{!$Label.Recipients}'}
+            ,{'name':'{!$Label.Survey_Confirmation}', 'onclick':'goToSurveyCampaignConfirmation()'}
+            ]
+        
+        }"></c:customtabs>
+        
+        <apex:actionFunction name="goToSurveyTemplate" action="{!RedirectOnSurveyTemplate}"></apex:actionFunction>
+        <apex:actionFunction name="goToEmailTemplate" action="{!RedirectOnEmailTemplate}"/><!--RedirectOnSendMethod}"></apex:actionFunction>-->
+        <apex:actionFunction name="goToSurveyCampaignConfirmation" action="{!RedirectOnconfirmation}"></apex:actionFunction>
+        
+           <apex:outputPanel id="erromsg" rendered="{!IF(pageRender == false, true, false)}">
+    <div class="message infoM3" role="alert">
+        <table border="0" cellpadding="0" cellspacing="0" class="messageTable" style="padding:0px;margin:0px;">
+            <tbody><tr valign="top">
+                <td>
+                    <img alt="INFO" class="msgIcon" src="/s.gif" title="INFO"></img>
+                </td>
+                <td class="messageCell"><div id="j_id0:j_id9:pgmsg:j_id13:j_id14:0:j_id15:j_id16:j_id18" class="messageText"><span id="j_id0:j_id9:pgmsg:j_id13:j_id14:0:j_id15:j_id16:j_id19">
+                                <h4></h4></span>{!ErrorMessage}<br/></div>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                </td>
+            </tr>
+        </tbody></table>
+    </div>
+    </apex:outputPanel>
+        <apex:pageMessages id="pgmsg"/>
+        <div id="customErrorDiv" style="color:#cc0000"><span id="customResponseErrors" ></span></div>
+        
+        <!--
+        <div class="message errorM3 customErrorMessage" role="alert" style="display:none;">
+            <table border="0" cellpadding="0" cellspacing="0" class="messageTable" style="padding:0px;margin:0px;">
+                <tbody><tr valign="top"><td>
+                        <img alt="ERROR" class="msgIcon" src="/s.gif" title="ERROR" />
+                    </td><td class="messageCell">
+                        <div id="customErrorDiv" class="messageText"><span id="customResponseErrors" style="color:#cc0000"></span></div>
+                    </td></tr>
+                </tbody>
+            </table>
+        </div> 
+         -->
+        
+        
+    <apex:pageBlock rendered="{!pageRender}" >
+    
+        <div class="waitingSearchDiv JSLoading" id="el_loading" style="display:none !important;background-color: #fbfbfb; height: 100%;opacity:0.90;width:100%;"> 
+            <div class="waitingHolder " style="position: fixed;left: 35%; right: 50%;" >
+                <img class="waitingImage "  src="/img/loading.gif" title="Please Wait..." />
+                <span class="waitingDescription " >{!$Label.Loading}...</span>
+                <img class="waitingImage" src="{!URLFOR($Resource.JSDataTable, 'images/Cancel.png')}" title="Please Wait..." onClick="$('.JSLoading').fadeOut();" style="width: 14px;margin-top: -4px;margin-left: 10px;"/>
+            </div>
+        </div>
+    
+        <c:ActionStatusComponent />
+        <Apex:actionFunction name="callGoToStepFourOnly" action="{!goToStepFourOnly}" >             
+            <apex:param name="isAnyThingChanged" value=""/>
+        </apex:actionFunction>
+        
+        <apex:actionFunction name="deleteCollector" action="{!deleteCollector}" reRender="topPanel" status="status"/>
+        
+        <apex:actionFunction name="continueToNextPage" action="{!continueToNextPage}" />
+
+        <apex:pageblocksection columns="1">
+            
+                <apex:outputPanel id="topPanel">
+                    
+                        <table class="leftIndented">
+                        <tr>
+                            <td colspan="2" class="MainHeading">
+                                {!$Label.Select_Method_Of_Sending}
+                            </td>
+                        </tr>
+                    
+                        <tr><td class="LeftColumn">
+                           {!$Label.Method_of_sending}
+                        </td><td>
+                            <apex:commandButton value="Manual" styleClass="{!if(campaignType=='Manual','SelectedButton ','')}" status="status" action="{!populateCampaignType}" reRender="filterCriterias, topPanel, pgmsg, buttons, recipientFilterButtons" disabled="{!isManualDisabled}">
+                                <apex:param name="campaigntype" value="Manual" />
+                            </apex:commandButton>
+                            <apex:commandButton value="Triggered" styleClass="{!if(campaignType=='Triggered','SelectedButton ','')}" status="status" action="{!populateCampaignType}" reRender="filterCriterias, topPanel, pgmsg, buttons, recipientFilterButtons" disabled="{!isTriggeredDisabled}">
+                                <apex:param name="campaigntype"  value="Triggered" />
+                            </apex:commandButton>
+                            <apex:commandButton value="Recurring" styleClass="{!if(campaignType=='Recurring','SelectedButton ','')}" status="status" action="{!populateCampaignType}" reRender="filterCriterias, topPanel, pgmsg, buttons, recipientFilterButtons" disabled="{!isRecurringDisabled}">
+                                <apex:param name="campaigntype" value="Recurring"/>
+                            </apex:commandButton>
+                            
+                        </td></tr>
+                        
+                        
+                        <tr style="display:{!if(campaigntype=='Triggered','','none')}"><td class="LeftColumn">
+                            {!$Label.surveymonkey__Apply_Delay} 
+                        </td><td>
+                            <div id="delayPanel">
+                                <apex:inputField value="{!objCollector.SurveyMonkey__Trigger_Delay__c}" style="width:50px;" onKeyDown="return numericFilter(event, this.value);"/>
+                                <!-- <apex:inputField value="{!objCollector.Trigger_Delay_Type__c}" /> -->
+                                <apex:outputText value="{!$Label.surveymonkey__Trigger_Delay_Type}" style="margin-left:10px"/>
+                            </div>
+                            <script>
+                                /* Obsolete code: Client doesn't want to have show/hide feature
+                                
+                                onChange="if(this.checked==true){document.getElementById('delayPanel').style.display='';}else{document.getElementById('delayPanel').style.display='none';}"
+                                
+                                if(document.getElementById('{!$Component.applyDelay}').checked){
+                                    document.getElementById('delayPanel').style.display='';
+                                }else{
+                                    document.getElementById('delayPanel').style.display='none';
+                                }*/
+                            </script>
+                        </td></tr>
+                        
+                    
+                        <tr style="display:{!if(campaigntype=='Recurring' && IsParentCollector,'','none')}">
+                            <td  class="LeftColumn">
+                               {!$Label.Send_Every} 
+                            </td><td>
+                                <table><tr><td>
+                                        <apex:inputfield value="{!scheduleRule.SurveyMonkey__Frequency_Number__c}"   style="width:25px" rendered="{!(isEditSchedule)}" 
+                                        onkeydown="limitfieldvalue(this.id);"
+                                        onkeyup="limitfieldvalue(this.id);"
+                                        />
+                                        <apex:outputField value="{!scheduleRule.SurveyMonkey__Frequency_Number__c}" style="width:25px" rendered="{! not(isEditSchedule)}"/>
+                                    </td><td> 
+                                        <apex:inputField value="{!scheduleRule.SurveyMonkey__Frequency__c}" rendered="{!(isEditSchedule)}"/>
+                                        <apex:outputField value="{!scheduleRule.SurveyMonkey__Frequency__c}" rendered="{!not(isEditSchedule)}"/>
+                                    </td><td>
+                                        &nbsp;
+                                    </td>
+                                    </tr>
+                                 </table>
+                             </td>
+                        </tr><tr style="display:{!if(campaigntype=='Recurring' && IsParentCollector,'','none')}">
+                             <td class="LeftColumn">
+                                    {!$Label.Begining}     
+                             </td><td>
+                                    <apex:inputField value="{!scheduleRule.SurveyMonkey__Start_Date__c}" rendered="{!(isEditSchedule)}"/>
+                                    <apex:outputField value="{!scheduleRule.SurveyMonkey__Start_Date__c}" rendered="{!not(isEditSchedule)}"/>
+                             </td>
+                        </tr><tr style="display:{!if(campaigntype=='Recurring' && IsParentCollector,'','none')}">
+                            <td class="LeftColumn">
+                                 {!$Label.surveymonkey__Ending}       
+                            </td><td>
+                                <apex:inputField value="{!scheduleRule.SurveyMonkey__End_Date__c}" rendered="{!(isEditSchedule)}"/>
+                                <apex:outputField value="{!scheduleRule.SurveyMonkey__End_Date__c}" rendered="{!not(isEditSchedule)}"/>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="2" class="MainHeading">
+                            {!$Label.Select_Recipients}
+                        </td>
+                    </tr>
+                    <tr><td class="LeftColumn"> 
+                       {!$Label.Recipient_Source} 
+                    </td><td>    
+                        <apex:outputPanel id="recipientButtons">   
+                            <apex:commandButton styleClass="{!if(JSENCODE(surveyRecipient)=='Campaign','SelectedButton ','')}" value="Campaigns"  status="status" action="{!selectRecipientSource}" reRender="filterCriterias, recipientButtons, pgmsg"  disabled="{!isCampaignDisabled}" onComplete="if('{!JSENCODE(selectedCriteriaType)}'=='Existing Report'){checkReportsLoaded('{!JSENCODE(selectedCriteriaType)}', '{!isProccessPending}'); }else if('{!JSENCODE(selectedCriteriaType)}'=='Existing List View' && '{!JSENCODE(FilterId)}'!=null && '{!JSENCODE(FilterId)}'!=''){ getDataForListView('{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}','{!JSENCODE(FilterId)}', false ,'{!JSENCODE(campaignType)}');}">
+                                <apex:param value="Campaign" assignTo="{!surveyRecipient}"/>
+                            </apex:commandButton>
+                            <apex:commandButton styleClass="{!if(JSENCODE(surveyRecipient)=='Case','SelectedButton ','')}" value="Cases" status="status" action="{!selectRecipientSource}" reRender="filterCriterias, recipientButtons, pgmsg" disabled="{!isCaseDisabled}" onComplete="if('{!JSENCODE(selectedCriteriaType)}'=='Existing Report'){checkReportsLoaded('{!JSENCODE(selectedCriteriaType)}', '{!isProccessPending}'); }else if('{!JSENCODE(selectedCriteriaType)}'=='Existing List View' && '{!JSENCODE(FilterId)}'!=null && '{!JSENCODE(FilterId)}'!=''){ getDataForListView('{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}','{!JSENCODE(FilterId)}',false,'{!JSENCODE(campaignType)}');}"> 
+                                <apex:param value="Case" assignTo="{!surveyRecipient}"/>
+                            </apex:commandButton>
+                            <apex:commandButton styleClass="{!if(JSENCODE(surveyRecipient)=='Contact','SelectedButton ','')}" value="Contacts" action="{!selectRecipientSource}" status="status" reRender="filterCriterias, recipientButtons, pgmsg" disabled="{!isContactDisabled}" onComplete="if('{!JSENCODE(selectedCriteriaType)}'=='Existing Report'){checkReportsLoaded('{!JSENCODE(selectedCriteriaType)}', '{!isProccessPending}'); }else if('{!JSENCODE(selectedCriteriaType)}'=='Existing List View' && '{!JSENCODE(FilterId)}'!=null && '{!JSENCODE(FilterId)}'!=''){ getDataForListView('{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}','{!JSENCODE(FilterId)}',false,'{!JSENCODE(campaignType)}');}">
+                                <apex:param value="Contact" assignTo="{!surveyRecipient}"/>
+                            </apex:commandButton>
+                            <apex:commandButton styleClass="{!if(JSENCODE(surveyRecipient)=='Lead','SelectedButton ','')}" value="Leads" action="{!selectRecipientSource}" status="status" reRender="filterCriterias, recipientButtons, pgmsg" disabled="{!isLeadDisabled}" onComplete="if('{!JSENCODE(selectedCriteriaType)}'=='Existing Report'){checkReportsLoaded('{!JSENCODE(selectedCriteriaType)}', '{!isProccessPending}'); }else if('{!JSENCODE(selectedCriteriaType)}'=='Existing List View' && '{!JSENCODE(FilterId)}'!=null && '{!JSENCODE(FilterId)}'!=''){ getDataForListView('{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}','{!JSENCODE(FilterId)}',false,'{!JSENCODE(campaignType)}');}">
+                                <apex:param value="Lead" assignTo="{!surveyRecipient}"/>
+                            </apex:commandButton>
+                            <apex:commandButton styleClass="{!if(JSENCODE(surveyRecipient)=='User','SelectedButton ','')}" value="Users" action="{!selectRecipientSource}" status="status" reRender="filterCriterias, recipientButtons, pgmsg" disabled="{!isUserDisabled}" onComplete="if('{!JSENCODE(selectedCriteriaType)}'=='Existing Report'){checkReportsLoaded('{!JSENCODE(selectedCriteriaType)}', '{!isProccessPending}'); }else if('{!JSENCODE(selectedCriteriaType)}'=='Existing List View' && '{!JSENCODE(FilterId)}'!=null && '{!JSENCODE(FilterId)}'!=''){ getDataForListView('{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}','{!JSENCODE(FilterId)}',false,'{!JSENCODE(campaignType)}');}">
+                                <apex:param value="User" assignTo="{!surveyRecipient}"/>
+                            </apex:commandButton>
+                            
+                        </apex:outputPanel>
+                    </td></tr>
+                    <tr><td colspan="2"></td></tr>
+                    <tr style="display:{!if(campaigntype=='Triggered', 'none','')}"><td class="LeftColumn">
+                       {!$Label.Recipient_Filter_Source} 
+                    </td>
+                        <td>
+                            <apex:outputPanel id="recipientFilterButtons">
+                                <apex:commandButton value="Custom" styleClass="{!if(JSENCODE(selectedCriteriaType)=='Custom','SelectedButton ','')}" status="status" reRender="filterCriterias, buttons, recipientFilterButtons, pgmsg" disabled="{!isCustomDisabled}" action="{!setFilterCriteriaList}">
+                                    <apex:param value="Custom" assignTo="{!selectedCriteriaType}"/>
+                                </apex:commandButton>
+                                <apex:commandButton value="Existing List View" styleClass="{!if(JSENCODE(selectedCriteriaType)=='Existing List View','SelectedButton ','')}" status="status"  reRender="filterCriterias, buttons, recipientFilterButtons, pgmsg" disabled="{!isListViewDisabled}" action="{!setFilterCriteriaList}" onComplete="if('{!JSENCODE(FilterId)}'!=null && '{!JSENCODE(FilterId)}'!=''){ getDataForListView('{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}','{!JSENCODE(FilterId)}',false,'{!JSENCODE(campaignType)}');}">
+                                    <apex:param value="Existing List View" assignTo="{!selectedCriteriaType}"/>
+                                </apex:commandButton>
+                                <apex:commandButton value="Existing Report" styleClass="{!if(JSENCODE(selectedCriteriaType)=='Existing Report','SelectedButton ','')}" status="status"  reRender="filterCriterias, buttons, recipientFilterButtons, pgmsg" disabled="{!isExistingReports}" action="{!setFilterCriteriaList}" onComplete="checkReportsLoaded('{!JSENCODE(selectedCriteriaType)}', '{!isProccessPending}');">
+                                    <apex:param value="Existing Report" assignTo="{!selectedCriteriaType}"/>
+                                </apex:commandButton>
+                            </apex:outputPanel>
+                        </td>
+                    </tr>
+                    </table>
+                </apex:outputPanel> 
+                <apex:outputPanel id="filterCriterias">
+                    <apex:outputPanel id="basicFilter" rendered="{!(JSENCODE(selectedCriteriaType) == 'Custom' || selectedCriteriaType == 'Existing List View' || selectedCriteriaType == 'Existing Report') && campaignType!='' && JSENCODE(surveyRecipient)!=''}">
+                        
+                        <!-- Custom Filter : Start -->
+                        <apex:outputPanel rendered="{!selectedCriteriaType == 'Custom'}">
+                            <table><tr><td class="LeftColumn">
+                            <apex:outputpanel id="recipientCustomFilterButtons" rendered="{!IF(campaignType =='Triggered',false,true)}">
+                                  {!$Label.surveymonkey__Custom_Recipient_Filters}   
+                            </apex:outputpanel>
+                            <apex:outputpanel id="recipientTriggeredFilterButtons" rendered="{!IF(campaignType =='Triggered',true,false)}">
+                                   {!$Label.surveymonkey__Triggered_Filters}    
+                            </apex:outputpanel>
+                                </td><td>
+                                    <table>                                 
+                                        <tr><td><b>{!$Label.surveymonkey__Field}</b></td><td><b>{!$Label.surveymonkey__Operator}</b></td><td><b>{!$Label.surveymonkey__Value}</b></td></tr>
+                                        <apex:variable var="counter" value="{!1}" />
+                                        <apex:repeat value="{!filterCriteriaList}" var="filterCriteria">
+                                         
+                                            <tr><td>
+                                                    <apex:selectList size="1" value="{!filterCriteria.fieldName}" >
+                                                        <apex:selectOptions value="{!fieldList}" />
+                                                        <apex:actionSupport event="onchange" action="{!updatefieldType}" reRender="basicFilter,pgmsg" status="status" >
+                                                            <apex:param name="fCriteria" assignTo="{!selectedFilterCriteriaSrNo}" value="{!filterCriteria.srNo}"/>
+                                                        </apex:actionSupport>
+                                                    </apex:selectList>
+                                                </td><td>
+                                                    <apex:selectList size="1" value="{!filterCriteria.operator}" rendered="{!filterCriteria.isNumericField  || filterCriteria.fieldType=='CURRENCY'}" onchange="setHook();">
+                                                        <apex:selectOptions value="{!filterNumericOperators}" /> 
+                                                    </apex:selectList>
+                                                    
+                                                    <apex:selectList size="1" value="{!filterCriteria.operator}" rendered="{!not(filterCriteria.isNumericField) && filterCriteria.fieldType!='CURRENCY' && filterCriteria.fieldType!='REFERENCE' && filterCriteria.fieldType!='ID' && filterCriteria.fieldType!='BOOLEAN'}" onchange="setHook();">
+                                                        <apex:selectOptions value="{!filterNonNumericOperators}" />
+                                                    </apex:selectList>
+                                                    
+                                                    <apex:selectList size="1" value="{!filterCriteria.operator}" rendered="{!not(filterCriteria.isNumericField) && (filterCriteria.fieldType=='REFERENCE' || filterCriteria.fieldType=='ID' || filterCriteria.fieldType=='BOOLEAN' )}" onchange="setHook();">
+                                                        <apex:selectOptions value="{!filterReferenceOperators}" />
+                                                    </apex:selectList>
+                                                </td><td>
+                                                    <apex:selectList value="{!filterCriteria.value}" rendered="{!filterCriteria.fieldType=='PICKLIST'}" size="1">
+                                                        <apex:selectOptions value="{!filterCriteria.picklist}" />
+                                                    </apex:selectList>
+                                                    <apex:outputPanel rendered="{!filterCriteria.fieldType!='PICKLIST'}">
+                                                        <apex:inputText id="InText" value="{!filterCriteria.value}" rendered="{! isNull(filterCriteria.fieldName) || filterCriteria.fieldName==''  || (filterCriteria.isUpdateable==false && filterCriteria.fieldType!='DATE' && filterCriteria.fieldType!='DATETIME')|| filterCriteria.fieldName=='email'}" onchange="setHook();" />
+                                                        
+                                                        <apex:inputField id="InDateTimeField" value="{!filterCriteria.criteria.SurveyMonkey__DateTime__c}" rendered="{! Not(isNull(filterCriteria.fieldName)) && filterCriteria.isUpdateable==false &&  filterCriteria.fieldType=='DATETIME'}" onchange="setHook();"/>
+                                                        <apex:inputField id="InDateField" value="{!filterCriteria.criteria.SurveyMonkey__Date__c}" rendered="{! filterCriteria.isUpdateable==false && filterCriteria.fieldType=='DATE' }" onchange="setHook();"/>
+                                                        <apex:inputField id="InField" value="{!filterCriteria.recordObject[filterCriteria.fieldName]}" rendered="{! Not(isNull(filterCriteria.fieldName)) && filterCriteria.fieldName!='' && filterCriteria.isUpdateable && filterCriteria.fieldName!='email' && filterCriteria.fieldType!='BOOLEAN'}" onchange="setHook();"/>
+                                                        <apex:inputField id="BoolField" value="{!filterCriteria.recordObject[filterCriteria.fieldName]}" rendered="{!Not(isNull(filterCriteria.fieldName)) && filterCriteria.fieldName!='' && filterCriteria.isUpdateable && filterCriteria.fieldType=='BOOLEAN' }" onchange="setHook();"/> 
+                                                   </apex:outputPanel> 
+                                                </td><td>
+                                                    <apex:outputText value="AND" rendered="{!counter!=filterCriteriaList.size }"/>
+                                                    <apex:commandButton value="Add more" rendered="{!counter==filterCriteriaList.size && filterCriteriaList.size <= 12}" action="{!addCriteria}" status="status" rerender="basicFilter"/>
+                                                </td>
+                                            </tr>
+                                            <apex:variable var="counter" value="{!counter+1}" />
+                                        </apex:repeat>
+                                        <!-- <tr><td colspan="3"> <center> <apex:commandButton value="Search" action="{!getBasicFilterData}" status="status"  reRender="basicFilter, pgmsg"/> </center> </td></tr> -->
+                                        <!-- for Javascript Remoting : Start -->
+                                            <tr><td colspan="3"> <center> 
+                                            <!-- JSENCODE() will only work on String type variable of the controller  -->
+                                                    <apex:commandButton value="Search" action="{!getBasicFilterData}" 
+                                                                        rendered="{!IF(campaignType ='Triggered',false,true)}"
+                                                                        status="status"  reRender="basicFilter, pgmsg" 
+                                                                        onComplete="if('{!jsencode(CustomFilterSoqlString)}'!=''){ getDataForCustomFilter('{!jsencode(CustomFilterSoqlString)}','{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}',false, '{!JSENCODE(campaignType)}');} return false;"/> </center> </td></tr>
+                                        <!-- for Javascript Remoting : End -->
+                                        
+                                    </table>
+                                </td></tr>
+                            </table>
+                        </apex:outputPanel>
+                        <!-- Custom Filter : End -->
+                        
+                        <!-- ListView: Start -->
+                            <apex:outputPanel rendered="{!selectedCriteriaType == 'Existing List View'}">
+                             <table>
+                              <tr>
+                                <td width="140px" class="LeftColumn">
+                                   {!$Label.Select_List_View}    
+                                </td>
+                                <td>                                   
+                                    <apex:selectList value="{!FilterId}" size="1" id="filterMenu" >
+                                      <apex:selectOptions value="{!ExistingViews}"></apex:selectOptions>
+                                      <apex:actionSupport event="onchange" reRender="selectAllForCustomAndList,pgmsg" status="status" onsubmit=" getDataForListView('{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}',this.value,false,'{!JSENCODE(campaignType)}'); "/>
+                                  </apex:selectList>
+                                </td>
+                             </tr>
+                            </table>
+                           </apex:outputPanel>
+                       <!-- List View : End -->
+                       
+                       <!-- For Report : Start -->
+                           <apex:outputPanel id="reportPanel" rendered="{!selectedCriteriaType == 'Existing Report'}">
+                                <apex:outputPanel id="reportFunctions">
+                                    <apex:actionFunction name="populateAllReports" action="{!getAllReports}" reRender="rptpicklist, reportFunctions"  status="status" onComplete=" if('{!isProccessPending}'=='true'){populateAllReports();}"/>
+                                </apex:outputPanel>
+                                    <!-- <span style="color:red;"> &nbsp; &nbsp;
+                                         {!if(surveyRecipient=='Contact' || surveyRecipient=='Lead' || surveyRecipient=='User','* This app shows only those reports which contains Id field (for lead reports, converted leads records will be excluded).',
+                                                if(surveyRecipient=='Case', '* This app shows only those reports which contains Case Id field.',
+                                                    if(surveyRecipient=='Campaign', '* This app shows only those reports which contains Campaign Id field.','')
+                                                ) 
+                                          )}
+                                    </span> -->
+                                    <br/>
+                                    <table><tr>
+                                        <td class="LeftColumn">
+                                            {!$Label.Select_Report} 
+                                            :
+                                        </td>
+                                        <td>
+                                            <span style="bottom:7px;right:10px;" class="helpButton" id="reportPicklist-_help">
+                                            <!-- <label for="{!$component.reportPicklist}" style="font-size: 100%;font-weight: bold;"></label> -->
+                                            <img src="/s.gif" alt="" class="helpOrb" title="" />
+                                            <script>
+                                            sfdcPage.setHelp('reportPicklist', 'Reports must contain a {!surveyRecipient} ID');
+                                            </script>
+                                            </span>
+                                            </td>
+                                            <td> 
+                                            <apex:outputPanel id="rptpicklist">
+                                                <apex:selectList value="{!selectedReportId}" size="1" id="reportPicklist">
+                                                    <apex:selectOptions value="{!lstReport}" />
+                                                    <apex:actionsupport event="onchange" 
+                                                    action="{!getReportForPage}" 
+                                                    reRender="rptpicklist" 
+                                                    status="status" 
+                                                    onComplete="if('{!jsencode(ReportRecordSoqlString)}'!=''){ getDataForCustomFilterReport('{!jsencode(ReportRecordSoqlString)}','{!JSENCODE(columnNamesForPage)}','{!JSENCODE(fieldLabels)}','{!JSENCODE(surveyRecipient)}',false, '{!JSENCODE(campaignType)}');} return false;"/>
+                                                </apex:selectList>
+                                            </apex:outputPanel>
+                                            <script>
+                                                $( document ).ready( function(){
+                                                        populateAllReports();
+                                                    } 
+                                                );
+                                            </script> 
+                                        </td></tr>
+                                    </table>
+                            </apex:outputPanel>
+                        <!-- For Report : End -->
+                        
+                        
+                        <apex:actionFunction name="aSelectItem" action="{!doSelectItem}"  rerender="mps" status="status" >
+                            <apex:param name="contextItem" value="" assignTo="{!contextItem}"/>
+                        </apex:actionFunction>
+                       
+                        <apex:actionFunction name="aDeselectItem" action="{!doDeselectItem}" rerender="mps" status="status">
+                            <apex:param name="contextItem" value="" assignTo="{!contextItem}"/>
+                        </apex:actionFunction>  
+                        
+                        <!-- <apex:actionFunction name="refreshSelectedIdsAndCount" reRender="selectedRecIdsPanel" status="status"/> -->
+                        
+                        <apex:outputpanel rendered="{!campaigntype!='Triggered'}">
+                        
+                            <apex:outputPanel id="selectedRecIdsPanel">
+                                <apex:inputHidden id="selectedRecIds" html-class="selectedRecIds" value="{!selectedRecIds}"/>
+                            </apex:outputPanel>
+                        
+                            <table width="100%">
+                            
+                            <!-- <tr><td class="LeftColumn">&nbsp;</td><td> 
+                                    <apex:outputPanel styleclass="selectAllForCustomAndList" style="display:none;">
+                                        <apex:inputCheckbox onChange="selectDeselectAllInternal(this);" value="{!selectAll}" styleClass="selectAllHH" />
+                                    </apex:outputPanel>
+                            </td></tr> -->
+                                
+                            <tr><td class="LeftColumn">
+                                <div style="display:none" id="filterMatches">
+                                    {!$Label.Filter_Matches} : <apex:outputText id="totalRecords" styleclass="totalRecords" rendered="{!$ObjectType.EmailTemplate.fields.Body.Accessible}" value="{!totalRecords}" />
+                                </div>    
+                            </td><td >
+                            
+                                <!-- Related to Javascript Remoting : Start -->
+                                    <div id='DataTableDiv'>
+                                        <table id="rowDataTable">
+                                        </table>
+                                    </div>
+                                <!-- Related to Javascript Remoting : End -->
+                            </td></tr>
+                            </table>
+                        </apex:outputpanel>
+                    </apex:outputPanel>
+                
+                </apex:outputPanel>
+                
+                <apex:outputPanel id="buttons">
+                    <center> 
+                        <apex:commandButton value="{!$Label.surveymonkey__Back}" onclick="if(confirm('Your changes will be lost.. are you sure?')){returnToPrevious();} return false;"/>
+                        <apex:commandButton value="{!$Label.surveymonkey__Cancel}"  action="{!Cancel}"/>
+                        <apex:commandButton value="{!$Label.surveymonkey__Continue}" action="{!goToStepFourReport_new}" rendered="{!selectedCriteriaType == 'Existing Report'}" id="btnReport"/>
+                        <apex:commandButton value="{!$Label.surveymonkey__Continue}"  action="{!goToStepFour}" id="btnCustomOrListView" rendered="{!selectedCriteriaType == 'Existing List View' || selectedCriteriaType == 'Custom' }"/>
+                    </center>
+                </apex:outputPanel>
+                <apex:actionfunction name="returnToPrevious"  action="{!RedirectOnEmailTemplate}"/>
+               </apex:pageblocksection>
+    </apex:pageBlock>
+    <!-- <apex:commandLink value="Demo" onClick="myDemo(); return false;"/> -->
+    </apex:form>                
+ 
+</apex:page>

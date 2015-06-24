@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>Map</defaultLandingTab>
+    <label>Geopointe</label>
+    <tab>standard-Lead</tab>
+    <tab>standard-Account</tab>
+    <tab>standard-Contact</tab>
+    <tab>standard-Opportunity</tab>
+    <tab>standard-Case</tab>
+    <tab>Map</tab>
+    <tab>Visualize</tab>
+    <tab>Geo_Location__c</tab>
+    <tab>Geocode__c</tab>
+    <tab>My_Settings</tab>
+    <tab>Geopointe_Setup</tab>
+    <tab>Appointment__c</tab>
+    <tab>Unvailability__c</tab>
+    <tab>Source__c</tab>
+    <tab>Grouping__c</tab>
+    <tab>MSA__c</tab>
+    <tab>Zip_Code__c</tab>
+    <tab>Account_MSA_Connection__c</tab>
+    <tab>Service_Request_Type__c</tab>
+    <tab>Work_Order_Dispatch__c</tab>
+    <tab>Service_Technician__c</tab>
+    <tab>Property_Agent__c</tab>
+    <tab>Total_Response__c</tab>
+    <tab>Service_Request1__c</tab>
+    <tab>Emergency_Dispatch__c</tab>
+    <tab>Floor_Plan__c</tab>
+    <tab>Unit__c</tab>
+    <tab>Acount_Management_Playbook__c</tab>
+    <tab>Default_Availability__c</tab>
+    <tab>Integration__c</tab>
+</CustomApplication>

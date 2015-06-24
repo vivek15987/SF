@@ -1,0 +1,246 @@
+<apex:page controller="SurveyMonkey.TouchRulesController" action="{!pageLoad}" tabStyle="Survey_Campaign__tab">
+<head>
+<apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-1.10.1.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'complete.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery.dataTables.min.js')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'demo_table_jui.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.SurveyMonkey__JSDataTable, 'jquery-ui-1.7.2.custom.css')}"/>    
+<apex:stylesheet value="{!$Resource.SurveyMonkey__SM_Stylesheet}"/>
+<apex:stylesheet value="{!$Resource.SurveyMonkey__sm_app}"/>
+
+   <style type="text/css" media="screen">
+            .dataTables_info { padding-top: 0; }
+            .dataTables_paginate { padding-top: 0; }
+            .css_right { float: right; }
+            #example_wrapper .fg-toolbar { font-size: 0.8em }
+            #theme_links span { float: left; padding: 2px 10px; }
+            #example_wrapper { -webkit-box-shadow: 2px 2px 6px #666; box-shadow: 2px 2px 6px #666; border-radius: 5px; }
+            #example tbody {
+                border-left: 1px solid #AAA;
+                border-right: 1px solid #AAA;
+            }
+            #example thead th:first-child { border-left: 1px solid #AAA; }
+            #example thead th:last-child { border-right: 1px solid #AAA; }
+    </style>
+         
+<style>
+h3{
+color: black;
+font-family: arial;
+font-size: 13px;
+}
+.header {
+    font-size: 25px;
+    display: block;
+    font-family: Arial;
+    margin-left: 500px;
+}
+.custPopup{           
+    background-color: white;
+    border-width: 2px;
+    border-style: solid;
+    z-index: 9999;
+    left: 50%;
+    padding:10px;
+    position: absolute;
+    /* These are the 3 css properties you will need to change so the popup 
+    displays in the center of the screen. First set the width. Then set 
+    margin-left to negative half of what the width is. You can add 
+    the height property for a fixed size pop up if you want.*/
+    width: 500px;
+    left: 300px;
+    top:25px;
+}
+.popupBackground{
+    background-color:black;
+    opacity: 0.20;
+    filter: alpha(opacity = 20);
+    position: absolute;
+    width: 100%;
+    height: 800%;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+}
+.lbl {
+    display: inline;
+}
+.inpt{
+    display: none;
+}
+
+.edit .lbl {
+    display: none;
+}
+.edit .inpt{
+    display: inline;
+}
+.edit .inpt INPUT{
+    width:35px;
+}
+</style> 
+ <script type="text/javascript">
+    jQuery.noConflict();
+    
+    function toggleEdit(tr){
+        jQuery(tr).toggleClass('edit');
+    }
+    
+    function jqueryDattable(){
+        jQuery('#cContainerId').dataTable( {
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
+            "aoColumnDefs": [{ "bSortable": false, "aTargets": [0, 4] }]      
+        } );
+        
+        console.log(jQuery('#cContainerId .errorMsg'));
+        jQuery('#cContainerId .errorMsg').each(function(){
+            console.log(this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
+            toggleEdit(this.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode);
+        });
+    }
+            jQuery(document).ready( function() {
+                jqueryDattable();
+                jQuery('select').find('option:first-child').remove();
+            } );        
+    </script>       
+</head>
+<apex:form >
+    <c:ActionStatusComponent />    
+          <!-- <c:customtabs data="{
+            'menu':[
+            {'name':'{!$Label.Survey_Campaign}', 'onclick':'parent.open(\\\'/apex/{prefix}SurveyCampaignList\\\',\\\'_self\\\');'}
+            ,{'name':'{!$Label.surveymonkey__Touch_Rules}'}
+            ,{'name':'{!$Label.Seat_Management}', 'onclick':'parent.open(\\\'/apex/{prefix}LicenseManagement\\\',\\\'_self\\\');'}
+            ,{'name':'{!$Label.Settings}', 'onclick':'parent.open(\\\'/apex/{prefix}SurveyMonkeySettings\\\',\\\'_self\\\');'}
+            ]
+        }"> </c:customtabs> -->
+    <c:customtabs data="{
+            'menu':[
+            {'name':'{!$Label.Survey_Campaign}', 'onclick':'parent.open(\\\'/apex/{!prefix}SurveyCampaignList\\\',\\\'_self\\\');'}
+            ,{'name':'{!$Label.surveymonkey__Touch_Rules}'}            
+            ,{'name':'{!$Label.Settings}', 'onclick':'parent.open(\\\'/apex/{!prefix}SurveyMonkeySettings\\\',\\\'_self\\\');'}
+            ]
+        }"> </c:customtabs>
+
+<apex:pageMessages id="pgmsg"/> 
+   <apex:pageBlock Title="{!$Label.surveymonkey__Touch_Rules}" id="pg">  
+   <table>
+       <tr>
+           <td>{!$Label.surveymonkey__Send_no_more_than}</td> 
+           <td><apex:inputField value="{!objTouchRule.SurveyMonkey__Max_Survey__c}" id="idMaxsurvey"/></td>
+           <td>{!$Label.surveymonkey__surveys_every}</td>
+           <td><apex:inputField value="{!objTouchRule.SurveyMonkey__Survey_Every__c}" id="idSurveyEvery"/></td>
+           <td><apex:inputField value="{!objTouchRule.SurveyMonkey__Survey_Every_On__c}" id="idSurveyEveryOn"/></td>
+           <td>{!$Label.surveymonkey__on}</td>
+           <td><apex:inputField value="{!objTouchRule.SurveyMonkey__Object__c}" id="idObject" required="false"/></td>
+           <td> <apex:commandButton value=" {!$Label.surveymonkey__Add_Rule}" action="{!Save}" status="status" rerender="pg,pgmsg" oncomplete="jqueryDattable()" rendered="{!$ObjectType.SurveyMonkey__Touch_Rules__c.createable}"/></td>
+       </tr>
+   </table>
+   <apex:panelGroup >
+    <!--    <c:PagingSorting CompcContainerId="testtable1"
+            CompStatus="Active__c"
+            CompObjectName="Touch_Rules__c"
+            CompcolumnFields="Activestatus__c, Object__c,  Max_Survey__c, Time_period__c"
+            CompcolumnTitles="Active, Object, Max Surveys,  Time Period, Actions"
+            actions="Activate, Delete "
+            Compsoql="select Id, Name, Activestatus__c, Active__c,  Max_Survey__c, Object__c, Survey_Every__c, Survey_Every_On__c, Time_period__c from Touch_Rules__c"   
+        /> -->
+        <div class="full_width">
+                            <table cellpadding="0" cellspacing="0" border="0" class="display" id="cContainerId" style="width: 100%">
+                            <thead>
+                                <apex:outputPanel layout="none" >
+                                    <tr>
+                                        
+                                            <th style="display:none">
+                                                
+                                            </th>                   
+                                            <!--<th>
+                                                <apex:outputText value="Active" />
+                                            </th>                   -->
+                                             <th>
+                                                <apex:outputText value="Object" />
+                                            </th>
+                                             <th>
+                                                <apex:outputText value="Max Surveys" />
+                                            </th>
+                                            <th>
+                                                <apex:outputText value="Time period" />
+                                            </th>
+                                            <th>
+                                                <apex:outputText value="Actions" />
+                                            </th>
+                                    </tr>
+                                </apex:outputPanel>
+                            </thead>
+                            <tbody>
+                                <apex:repeat value="{!records}" var="rec">
+                                    <tr>
+                                        <td style="display:none">
+                                                
+                                        </td>                   
+                                       <!-- <td>
+                                            {!rec.Activestatus__c} 
+                                        </td>-->
+                                        <td>
+                                            <span class="lbl"> {!rec.SurveyMonkey__Object__c} </span>
+                                            <span class="inpt"><apex:inputField value="{!rec.SurveyMonkey__Object__c} "/></span>
+                                        </td>
+                                        <td>
+                                            <span class="lbl">{!rec.SurveyMonkey__Max_Survey__c}</span>
+                                            <span class="inpt"><apex:inputField value="{!rec.SurveyMonkey__Max_Survey__c}"/></span>
+                                        </td>
+                                        <td>
+                                            <span class="lbl">{!rec.SurveyMonkey__Time_period__c}</span>
+                                            <span class="inpt">
+                                                <apex:panelGrid columns="3">
+                                                    Surveys&nbsp;Every 
+                                                    <apex:inputField value="{!rec.SurveyMonkey__Survey_Every__c}"/>
+                                                    <apex:inputField value="{!rec.SurveyMonkey__Survey_Every_On__c}"/>
+                                            </apex:panelGrid>
+                                            </span>
+                                        </td>
+                                          <td>
+                                            <apex:commandLink rerender="pg" oncomplete="jqueryDattable()" action="{!deactivateTouchRule}" rendered="{!IF((rec.SurveyMonkey__Activestatus__c=='Yes'),true,false)}" value="Deactivate" id="idActivate" status="status">
+                                                <apex:param name="recIdact " value="{!rec.Id}" assignTo="{!selectedtouchRuleId}"/>
+                                            </apex:commandLink>
+                                            
+                                            <apex:commandLink rerender="pg" oncomplete="jqueryDattable()" action="{!activateTouchRule}" rendered="{!IF((rec.SurveyMonkey__Activestatus__c=='Yes'),false, true)}" value="Activate" id="idDeactivate" status="status2">
+                                                <apex:param name="recIdact " value="{!rec.Id}" assignTo="{!selectedtouchRuleId}"/>
+                                            </apex:commandLink>
+                                            
+                                            &nbsp;&nbsp;| &nbsp;&nbsp;
+                                            <apex:commandLink oncomplete="jqueryDattable()" action="{!deleteTouchRule}" value="Delete" id="idDelete" status="status" rerender="pg">
+                                                <apex:param name="recIddel" value="{!rec.Id}" assignTo="{!selectedtouchRuleId}"/>
+                                            </apex:commandLink>
+                                            &nbsp;&nbsp;| &nbsp;&nbsp;
+                                            <a class="lbl" href="#" onclick="toggleEdit(this.parentNode.parentNode)">Edit</a>
+                                            <apex:commandLink styleClass="inpt" value="Save" action="{!inlineSave}" status="status2" oncomplete="jqueryDattable()" rerender="pg">    
+                                                <apex:param name="modifiedTouchrule" value="{!rec.Id}" assignTo="{!selectedtouchRuleId}"/>
+                                            </apex:commandLink>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                            </tbody>
+                             
+                        </table>
+                    </div>    
+        </apex:panelGroup>  
+                      
+    </apex:pageBlock>
+</apex:form> 
+    <apex:actionStatus id="status2" >
+          <apex:facet name="start">
+                <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb;
+                   height: 100%;opacity:0.90;width:100%;"> 
+                   <!-- <div class="waitingHolder" style="top: 74.2px; width: 91px;">-->
+                    <div class="waitingHolder" style="position: fixed;left: 35%; right: 50%;" >
+                        <img class="waitingImage" src="/img/loading.gif" title="Please Wait..." />
+                        <span class="waitingDescription">{!$Label.Loading}...</span>
+                        <img class="waitingImage" src="{!URLFOR($Resource.JSDataTable, 'images/Cancel.png')}" title="Please Wait..." onClick="hideStatus();" style="width: 14px;margin-top: -4px;margin-left: 10px;"/>
+                    </div>
+                </div>
+            </apex:facet>
+    </apex:actionStatus> 
+</apex:page>
